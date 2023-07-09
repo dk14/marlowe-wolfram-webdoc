@@ -15,8 +15,8 @@ interface SampledRow {
 
 interface ContractApi {
     state: NotebookState
-    injectMarloweContract: (c: MarloweContract) => void
-    sampleMarloweContract: (w: Window) => void
+    injectMarloweContract: (c: MarloweContract, update: boolean) => Promise<void>
+    sampleMarloweContract: () => void
     plotMarloweContract?: (sample: SampledRow[], where: HTMLDivElement) => void
 }
 
@@ -26,6 +26,7 @@ interface NotebookState {
     samplingInProgress: boolean
     sample?: SampledRow[]
     contract?: MarloweContract
+    template?: string
 }
 
 declare global {
@@ -45,27 +46,37 @@ darkify(window.document)
 
 if (window.marloweWindow != undefined) {
     window.marloweWindow().then(mw => {
+        
+                
         window.api = {
             state: {
                 isMarloweContractGenerated: false,
                 isMarloweContractSampled: false,
                 samplingInProgress: false
             },
-            injectMarloweContract: async (c: MarloweContract) => {
-                window.api.state.contract = c
+            injectMarloweContract: async (c: MarloweContract, updateState = true) => {
+                if (updateState) {
+                    window.api.state.contract = c
+                }
                 let marloweHome = mw.document.querySelector(".h-10") as HTMLElement
                 marloweHome?.click()
                 
                 let dontSave = mw.document.querySelector(".mr-medium") as HTMLElement
                 dontSave?.click()
 
-                let raw = await (await fetch(window.location.origin + `/marlowe-wolfram-webdoc/contracts/${c.template}.marlowe`)).text()
-                let toInject = processTemplate(c.template, c.terms, raw)
+                let raw
+                if (window.api.state.template == undefined) {
+                    raw = await (await fetch(window.location.origin + `/marlowe-wolfram-webdoc/contracts/${c.template}.marlowe`)).text()
+                    window.api.state.template = raw
+
+                } else {
+                    raw = window.api.state.template
+
+                }
+
                 let goToEditor = mw.document.querySelector('.mr-4') as HTMLElement
                 goToEditor?.click()
-                for (let i in mw.monaco.editor.getModels()) {
-                    mw.monaco.editor.getModels()[i].applyEdits([{range: {startLineNumber:0, startColumn: 0, endColumn: 1000, endLineNumber: 1000}, text: toInject}])
-                }
+
 
                 let menuBar = mw.document.querySelector(".menu-bar") as HTMLElement
                 menuBar?.setAttribute('style', "display: none")
@@ -75,6 +86,19 @@ if (window.marloweWindow != undefined) {
 
                 let staticAnalysis = mw.document.querySelector(".text-gray-darkest") as HTMLElement
                 staticAnalysis?.setAttribute('style', "display: none")
+                
+                let toInject = processTemplate(c.template, c.terms, raw)
+
+                try {
+                    await mw.monaco.editor.getModels()[mw.monaco.editor.getModels().length - 2].dispose()
+                } catch {
+
+                }
+
+                
+                await mw.monaco.editor.getModels()[mw.monaco.editor.getModels().length - 1].setValue(toInject)
+                
+                
 
                 let goToBlocks = mw.document.querySelector('.group')?.querySelector('.btn') as HTMLElement
                 goToBlocks?.click()
@@ -85,23 +109,30 @@ if (window.marloweWindow != undefined) {
                 window.api.state.isMarloweContractGenerated = true
                 window.dispatchEvent(new Event("state"))
             },
-            sampleMarloweContract: () => {
-                //todo check if in simulator already
+            sampleMarloweContract: async () => {
+    
                 window.api.state.samplingInProgress = true
                 window.api.state.sample = []
-                for (let i = window.api.state.contract!.terms.minValue; i <= window.api.state.contract!.terms.maxValue; i++) {
-                    let c = window.api.state.contract!
+                for (let i = window.api.state.contract!.terms.minValue; i <= window.api.state.contract!.terms.maxValue; i+=100) {
+                    let c = { ...window.api.state.contract!, terms: {...window.api.state.contract!.terms}, }
 
                     c.terms.minValue = i
                     c.terms.maxValue = i
-                    window.api.injectMarloweContract(c)
 
+                    await window.api.injectMarloweContract(c, false)
                     console.log(i)
-                    let sendToSimulator = mw.document.querySelector('.group')?.children[1] as HTMLElement
-                    sendToSimulator?.click()
+                    let sendToSimulator = mw.document.querySelectorAll('button')[1] as HTMLElement
+                    
+                    while(sendToSimulator['disabled']) {
+                        console.log("AWAIT")
+                        await new Promise(r => setTimeout(r, 100));
+                    }
+                    //await new Promise(r => setTimeout(r, 3000));
+                    sendToSimulator.click()
+                    
 
-                    let startSimulation = mw.document.querySelector('.transaction-btns')?.children[1] as HTMLElement
-                    startSimulation?.click()
+                    let startSimulation = mw.document.querySelectorAll('button')[2] as HTMLElement
+                    startSimulation.click()
 
                     let aliceDeposit = mw.document.querySelector('.plus-btn') as HTMLElement
                     aliceDeposit?.click()
@@ -121,14 +152,20 @@ if (window.marloweWindow != undefined) {
                     let bobPayoff = extractBobPayoffOpt == null || Number.isNaN(parseInt(extractBobPayoffOpt)) ? 0 : parseInt(extractBobPayoffOpt)
                     let alicePayoff = extractAlicePayoffOpt == null || Number.isNaN(parseInt(extractAlicePayoffOpt)) ? 0 : parseInt(extractAlicePayoffOpt)
 
+                    //console.log(window.api.state.sample)
                     window.api.state.sample.push({oracleValue: i, alicePayout: alicePayoff, bobPayout: bobPayoff})
+                    let endSimulation = mw.document.querySelectorAll('button')[0] as HTMLElement
+                    endSimulation.click()
+
                 }
+                
                 console.log(window.api.state.sample)
                 window.api.state.samplingInProgress = false
                 
                 window.api.state.isMarloweContractSampled = true
                 window.dispatchEvent(new Event("state"))
-                window.api.injectMarloweContract(window.api.state.contract!)
+                //window.api.injectMarloweContract(window.api.state.contract!, false)
+
 
             }
         }
