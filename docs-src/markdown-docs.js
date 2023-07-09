@@ -4,9 +4,9 @@ module.exports = {
     toc: true
   },
   site: {
-    // editSourceUrl: 'https://github.com/<git-org>/<git-repository>/tree/master/docs-src',
+    editSourceUrl: 'https://github.com/dk14/marlowe-wolfram-webdoc/tree/master/docs-src',
     title: 'Your Site Title',
-    // url: 'https://<git-org>.github.io/<git-repository>/'
+    url: 'https://dk14.github.io/marlowe-wolfram-webdoc/'
   },
   template: {
     name: 'default',
