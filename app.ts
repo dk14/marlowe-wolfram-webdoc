@@ -52,6 +52,7 @@ if (window.marloweWindow != undefined) {
                 marloweHome?.click()
                 let dontSave = mw.document.querySelector(".mr-medium") as HTMLElement
                 dontSave?.click()
+
                 let raw = await (await fetch(window.location.origin + `/marlowe-wolfram-webdoc/contracts/${c.template}.marlowe`)).text()
                 let toInject = processTemplate(c.template, c.terms, raw)
                 let goToEditor = mw.document.querySelector('.mr-4') as HTMLElement
@@ -75,6 +76,30 @@ if (window.marloweWindow != undefined) {
                 window.dispatchEvent(new Event("state"))
             },
             sampleMarloweContract: () => {
+                //todo check if in simulator already
+                let sendToSimulator = window.document.querySelector('.group')?.children[1] as HTMLElement
+                sendToSimulator?.click()
+
+                let startSimulation = window.document.querySelector('.transaction-btns')?.children[1] as HTMLElement
+                startSimulation?.click()
+
+                let aliceDeposit = window.document.querySelector('.plus-btn') as HTMLElement
+                aliceDeposit?.click()
+
+                let bobDeposit = window.document.querySelector('.plus-btn') as HTMLElement
+                bobDeposit?.click()
+
+                let skipToExercise = window.document.querySelectorAll('.plus-btn')[2] as HTMLElement
+                skipToExercise?.click()
+
+                let oracleInput = window.document.querySelector('input.flex-1') as HTMLElement
+                oracleInput.setAttribute("placeholder", "100")
+
+                let confirm = window.document.querySelector('.plus-btn') as HTMLElement
+                confirm?.click()
+
+                let log = window.document.querySelector('.grid-cols-description-location') as HTMLElement
+
                 window.api.state.sample = []
                 window.api.state.isMarloweContractSampled = true
                 window.dispatchEvent(new Event("state"))
