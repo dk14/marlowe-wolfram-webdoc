@@ -5,7 +5,7 @@ module.exports = {
   },
   site: {
     editSourceUrl: 'https://github.com/dk14/marlowe-wolfram-webdoc/tree/master/docs-src',
-    title: 'Your Site Title',
+    title: 'Marlowe Oracle Examples',
     url: 'https://dk14.github.io/marlowe-wolfram-webdoc/'
   },
   template: {
@@ -13,7 +13,7 @@ module.exports = {
     cssFiles: [
       '/css/main.css'
     ],
-    jsFiles: ['js/bundle.js', 'js/index.js'],
+    jsFiles: ['js/index.js', 'js/bundle.js'],
     cssVars: {
       brandColor: '#00A288',
       brandColorLight: '#8BDBCD',

@@ -18,10 +18,9 @@ window.marloweWindow = async () => {
 }
 
 
-window.marloweWindowInstance().then(async inst => {
+window.marloweWindow().then(async inst => {
     console.log('helloooo!!!!!!!!!')
     var script = await (await fetch(window.location.origin + '/marlowe-wolfram-webdocjs/bundle.js')).text()
-    console.log(script)
     inst.eval(script)
     console.log('helloooo!!!!!!!!!!!!!!')
 })
