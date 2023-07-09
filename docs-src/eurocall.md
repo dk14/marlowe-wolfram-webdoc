@@ -12,10 +12,17 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
 [source: Wolfram Alpha](https://api.wolframalpha.com/v1/result?appid=6WU6JX-46EP5U9AGX&i=1%20btc%20to%20usd%20number)
 
 <script>
+    window.flag = false
     window.addEventListener("tick", () => {
         if (!document.querySelector('#lock').checked) {
             document.querySelector('#ticker').value = window.tick
             window.activeTicker = window.tick
+            if (!window.flag) {
+                window.flag = true
+                document.querySelector('#minValue').value = window.tick - 400
+                document.querySelector('#maxValue').value = window.tick + 400
+            }
+            
         }
     })
     document.querySelector('#ticker').addEventListener('input', function() {
@@ -23,6 +30,11 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
         if (input != null) {
             window.tick = input
             window.activeTicker = window.tick
+            if (!window.flag) {
+                window.flag = true
+                document.querySelector('#minValue').value = window.tick - 400
+                document.querySelector('#maxValue').value = window.tick + 400
+            }
         }
     });
 </script>
@@ -35,14 +47,18 @@ Let's generate marlowe European Call contract first. Alice and Bob are betting o
 * Alice pays premium of <input type="number" id="premium" name="quantity" min="1" max="100000" value="200"></input> usd
 * Notional/Leverage is <input type="number" id="notional" name="quantity" min="1" max="100000" value="1"></input> btc
 * Bob's margin is <input type="number" id="margin" name="quantity" min="1" max="100000" value="300"></input> usd
+* Oracle range is <input type="number" id="minValue" name="quantity" min="1" max="100000" value="0"></input> to <input type="number" id="maxValue" name="quantity" min="1" max="100000" value="100000"></input>
 
 <script>
+
     window.extractTerms = () => {
         return {
             strike: parseInt(document.querySelector('#strike').value),
             premium: parseInt(document.querySelector('#premium').value),
             notional: parseInt(document.querySelector('#notional').value),
-            margin: parseInt(document.querySelector('#margin').value)
+            margin: parseInt(document.querySelector('#margin').value),
+            minValue: parseInt(document.querySelector('#minValue').value),
+            maxValue: parseInt(document.querySelector('#maxValue').value),
         }
         
     }

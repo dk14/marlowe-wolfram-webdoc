@@ -25,6 +25,7 @@ interface NotebookState {
     isMarloweContractSampled: boolean
     samplingInProgress: boolean
     sample?: SampledRow[]
+    contract?: MarloweContract
 }
 
 declare global {
@@ -51,8 +52,10 @@ if (window.marloweWindow != undefined) {
                 samplingInProgress: false
             },
             injectMarloweContract: async (c: MarloweContract) => {
+                window.api.state.contract = c
                 let marloweHome = mw.document.querySelector(".h-10") as HTMLElement
                 marloweHome?.click()
+                
                 let dontSave = mw.document.querySelector(".mr-medium") as HTMLElement
                 dontSave?.click()
 
@@ -75,41 +78,57 @@ if (window.marloweWindow != undefined) {
 
                 let goToBlocks = mw.document.querySelector('.group')?.querySelector('.btn') as HTMLElement
                 goToBlocks?.click()
+
+                let cancel = mw.document.querySelector(".uppercase") as HTMLElement
+                cancel?.click()
+
                 window.api.state.isMarloweContractGenerated = true
                 window.dispatchEvent(new Event("state"))
             },
             sampleMarloweContract: () => {
                 //todo check if in simulator already
                 window.api.state.samplingInProgress = true
-
-
-                let sendToSimulator = mw.document.querySelector('.group')?.children[1] as HTMLElement
-                sendToSimulator?.click()
-
-                let startSimulation = mw.document.querySelector('.transaction-btns')?.children[1] as HTMLElement
-                startSimulation?.click()
-
-                let aliceDeposit = mw.document.querySelector('.plus-btn') as HTMLElement
-                aliceDeposit?.click()
-
-                let bobDeposit = mw.document.querySelector('.plus-btn') as HTMLElement
-                bobDeposit?.click()
-
-                let skipToExercise = mw.document.querySelectorAll('.plus-btn')[2] as HTMLElement
-                skipToExercise?.click()
-
-                let oracleInput = mw.document.querySelector('input.flex-1') as HTMLElement
-                oracleInput?.setAttribute("placeholder", "100")
-
-                let confirm = mw.document.querySelector('.plus-btn') as HTMLElement
-                confirm?.click()
-
-                let log = mw.document.querySelector('.grid-cols-description-location') as HTMLElement
-
-                window.api.state.samplingInProgress = false
                 window.api.state.sample = []
+                for (let i = window.api.state.contract!.terms.minValue; i <= window.api.state.contract!.terms.maxValue; i++) {
+                    let c = window.api.state.contract!
+
+                    c.terms.minValue = i
+                    c.terms.maxValue = i
+                    window.api.injectMarloweContract(c)
+
+                    console.log(i)
+                    let sendToSimulator = mw.document.querySelector('.group')?.children[1] as HTMLElement
+                    sendToSimulator?.click()
+
+                    let startSimulation = mw.document.querySelector('.transaction-btns')?.children[1] as HTMLElement
+                    startSimulation?.click()
+
+                    let aliceDeposit = mw.document.querySelector('.plus-btn') as HTMLElement
+                    aliceDeposit?.click()
+
+                    let bobDeposit = mw.document.querySelector('.plus-btn') as HTMLElement
+                    bobDeposit?.click()
+
+                    let skipToExercise = mw.document.querySelectorAll('.plus-btn')[2] as HTMLElement
+                    skipToExercise?.click()
+
+                    let confirm = mw.document.querySelector('.plus-btn') as HTMLElement
+                    confirm?.click()
+
+                    let log = mw.document.querySelector('.grid-cols-description-location') as HTMLElement
+                    let extractBobPayoffOpt = /The contract pays ₳ (\d+) from account of Bob to Bob wallet/.exec(log.innerText)?.[1]
+                    let extractAlicePayoffOpt = /The contract pays ₳ (\d+) from account of Alice to Alice wallet/.exec(log.innerText)?.[1]
+                    let bobPayoff = extractBobPayoffOpt == null || Number.isNaN(parseInt(extractBobPayoffOpt)) ? 0 : parseInt(extractBobPayoffOpt)
+                    let alicePayoff = extractAlicePayoffOpt == null || Number.isNaN(parseInt(extractAlicePayoffOpt)) ? 0 : parseInt(extractAlicePayoffOpt)
+
+                    window.api.state.sample.push({oracleValue: i, alicePayout: alicePayoff, bobPayout: bobPayoff})
+                }
+                console.log(window.api.state.sample)
+                window.api.state.samplingInProgress = false
+                
                 window.api.state.isMarloweContractSampled = true
                 window.dispatchEvent(new Event("state"))
+                window.api.injectMarloweContract(window.api.state.contract!)
 
             }
         }
@@ -130,13 +149,6 @@ if (window.marloweWindow != undefined) {
         }
         poll()
         setInterval(poll, 10000)
-
-        setInterval(() => {
-            let oracleInput = mw.document.querySelector('input.flex-1') as HTMLElement
-            if (oracleInput?.getAttribute("placeholder") == "0" && !window.api.state.samplingInProgress && !mw.document.querySelector('.break-word-span')?.textContent?.includes("DO NOT")) {
-                oracleInput?.setAttribute("placeholder", window.activeTicker.toString())
-            }
-        }, 100)
 
     })
 

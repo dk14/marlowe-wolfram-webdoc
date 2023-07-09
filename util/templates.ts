@@ -5,6 +5,8 @@ export const processTemplate = (name: string, subst: {[key: string]: number}, te
             .replace("$margin", subst.margin.toString())
             .replace("$strike", subst.strike.toString())
             .replace("$premium", subst.premium.toString())
+            .replace("$minValue", subst.minValue.toString())
+            .replace("$maxValue", subst.maxValue.toString())
     }
     return template
 }

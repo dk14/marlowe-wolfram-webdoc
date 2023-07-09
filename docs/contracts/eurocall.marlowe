@@ -59,7 +59,7 @@ Let
                                                         "WOLF_BTCADA"
                                                         (Address "addr_test1vrxx3rjangevudlrejgp9m508uc26jd02n7lmdz365n4wrca35y5j")
                                                     )
-                                                    [Bound 0 1000000]
+                                                    [Bound $minValue $maxValue]
                                                 )
                                                 (Let
                                                     "market_ada"
