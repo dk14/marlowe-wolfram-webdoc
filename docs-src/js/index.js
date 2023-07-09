@@ -3,33 +3,20 @@ console.log('hello')
 
 
 
-const marloweWindow = () => document.getElementById('marlowe-frame').contentWindow.document.querySelector('replay-web-page').shadowRoot.querySelector('iframe').contentWindow.document.querySelector('replay-app-main').shadowRoot.querySelector('wr-coll').shadowRoot.querySelector('wr-coll-replay').shadowRoot.querySelector('iframe').contentWindow
+const getMarloweWindow = () => document.getElementById('marlowe-frame').contentWindow.document.querySelector('replay-web-page').shadowRoot.querySelector('iframe').contentWindow.document.querySelector('replay-app-main').shadowRoot.querySelector('wr-coll').shadowRoot.querySelector('wr-coll-replay').shadowRoot.querySelector('iframe').contentWindow
 
-window.marloweWindowInstance = async () => {
+window.marloweWindow = async () => {
     try {
-        if (marloweWindow() == undefined) {
+        if (getMarloweWindow() == undefined) {
             throw new Error('undefined')
         }
-        return marloweWindow()
+        return getMarloweWindow()
     } catch {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        return window.marloweWindowInstance()
+        return window.marloweWindow()
     }
 }
 
-
-var getFavicon = function(){
-    var favicon = undefined;
-    var nodeList = document.getElementsByTagName("link");
-    for (var i = 0; i < nodeList.length; i++)
-    {
-        if((nodeList[i].getAttribute("rel") == "icon")||(nodeList[i].getAttribute("rel") == "shortcut icon"))
-        {
-            favicon = nodeList[i].getAttribute("href");
-        }
-    }
-    return favicon;        
-}
 
 window.marloweWindowInstance().then(async inst => {
     console.log('helloooo!!!!!!!!!')
