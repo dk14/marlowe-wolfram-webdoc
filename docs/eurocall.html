@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Your Site Title | Eurocall</title>
+  <title>Marlowe Oracle Examples | Eurocall</title>
   
 
   <link rel="icon" href="/marlowe-wolfram-webdoc/favicon.png">
@@ -25,7 +25,7 @@
   <header class="site-header">
     <div class="wrapper">
       <a class="site-title" href="/marlowe-wolfram-webdoc">
-        Your Site Title
+        Marlowe Oracle Examples
       </a>
 
       
@@ -47,7 +47,7 @@
 
     
     <div class="nav-screen"></div>
-    <nav class="nav-list"><ul><li><a href="/marlowe-wolfram-webdoc">Home</a></li><li><a href="/marlowe-wolfram-webdoc/second">Second Page</a></li><li><a href="/marlowe-wolfram-webdoc/nested">Nested Page</a><ul><li><a href="/marlowe-wolfram-webdoc/nested/sibling">Nested Sibling</a></li></ul></li><li><a href="/marlowe-wolfram-webdoc/eurocall" class="current-page">Eurocall</a></li></ul></li></nav>
+    <nav class="nav-list"><ul><li><a href="/marlowe-wolfram-webdoc">Home</a></li><li><a href="/marlowe-wolfram-webdoc/eurocall" class="current-page">Eurocall</a></li></ul></li></nav>
     
 
     <div class="page-content-main">
@@ -60,19 +60,23 @@
         
         <div>
           <p><strong>Page Content</strong></p>
-          <div class="section-nav"><ul class="toc"><li><a href="#welcome">Welcome</a></li></ul></div>
+          <div class="section-nav"><ul class="toc"><li><a href="#marlowe-contract">Marlowe Contract</a></li><li><a href="#sampling">Sampling</a></li></ul></div>
         </div>
         
 
-        <div class="post-content"><h1 id="welcome">Welcome</h1>
-<p>This is my first page.</p>
+        <div class="post-content"><h1 id="marlowe-contract">Marlowe Contract</h1>
+<p>Let&#39;s generate marlowe contract first</p>
 <div id="generator"></div>
-<script> 
-var marloweWindow = () => document.getElementById('marlowe-frame').contentWindow.document.querySelector('replay-web-page').shadowRoot.querySelector('iframe').contentWindow.document.querySelector('replay-app-main').shadowRoot.querySelector('wr-coll').shadowRoot.querySelector('wr-coll-replay').shadowRoot.querySelector('iframe').contentWindow.document
-</script>
-<button type="button" onclick="marloweWindow().querySelector('.mr-4').click()">Click Me!</button>
+<button type="button" style="height: 30px" onclick="document.querySelector('#marlowe-frame').style = ''; window.api.injectMarloweContract({template: 'eurocall', terms: {}}); ">Generate Marlowe contract!</button>
 <br/>
-<iframe src="./marlowe.html" title="Marlowe" height="500" width = "100%" id = "marlowe-frame"></iframe></div>
+<br/>
+<iframe src="./marlowe.html" title="Marlowe" height="800" width = "100%" id = "marlowe-frame" style = "filter: blur(1.5px) grayscale(80%) hue-rotate(30deg) sepia(10%); pointer-events: none"></iframe>
+
+<h1 id="sampling">Sampling</h1>
+<p>Let&#39;s sample Marlowe contract and plot the payoff curve</p>
+<p><button type="button" style="height: 30px;" onclick="window.api.sampleMarloweContract(); ">Sample Marlowe contract!</button>
+<button type="button" style="height: 30px;" onclick="window.api.sampleMarloweContract(); ">Download as CSV</button></p>
+</div>
       </article>
 
       <footer class="site-footer">
@@ -106,6 +110,8 @@ var marloweWindow = () => document.getElementById('marlowe-frame').contentWindow
 
 
 <script src="/marlowe-wolfram-webdocjs/index.js"></script>
+
+<script src="/marlowe-wolfram-webdocjs/bundle.js"></script>
 
 
 
