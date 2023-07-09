@@ -13,7 +13,7 @@ module.exports = {
     cssFiles: [
       '/css/main.css'
     ],
-    jsFiles: ['js/index.js', 'js/bundle.js'],
+    jsFiles: ['/js/index.js', '/js/bundle.js'],
     cssVars: {
       brandColor: '#00A288',
       brandColorLight: '#8BDBCD',

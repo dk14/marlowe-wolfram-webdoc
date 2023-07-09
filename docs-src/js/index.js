@@ -3,7 +3,15 @@ console.log('hello')
 
 
 
-const getMarloweWindow = () => document.getElementById('marlowe-frame').contentWindow.document.querySelector('replay-web-page').shadowRoot.querySelector('iframe').contentWindow.document.querySelector('replay-app-main').shadowRoot.querySelector('wr-coll').shadowRoot.querySelector('wr-coll-replay').shadowRoot.querySelector('iframe').contentWindow
+const getMarloweWindow = () => {
+    document.getElementById('marlowe-frame').contentWindow
+    .document.querySelector('body').style+=";background-color: grey"
+
+    return document.getElementById('marlowe-frame').contentWindow
+    .document.querySelector('replay-web-page').shadowRoot.querySelector('iframe').contentWindow
+    .document.querySelector('replay-app-main').shadowRoot.querySelector('wr-coll')
+    .shadowRoot.querySelector('wr-coll-replay').shadowRoot.querySelector('iframe').contentWindow
+}
 
 window.marloweWindow = async () => {
     try {
@@ -18,9 +26,15 @@ window.marloweWindow = async () => {
 }
 
 
-window.marloweWindow().then(async inst => {
-    console.log('helloooo!!!!!!!!!')
-    var script = await (await fetch(window.location.origin + '/marlowe-wolfram-webdocjs/bundle.js')).text()
-    inst.eval(script)
-    console.log('helloooo!!!!!!!!!!!!!!')
-})
+
+const attachDarkReader = () => {
+    window.marloweWindow().then(async inst => {
+        console.log('helloooo!!!!!!!!!')
+        var script = await (await fetch(window.location.origin + '/marlowe-wolfram-webdocjs/bundle.js')).text()
+        inst.eval(script)
+        console.log('helloooo!!!!!!!!!!!!!!')
+    })
+}
+
+attachDarkReader()
+
