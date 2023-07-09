@@ -1,12 +1,12 @@
 Let
     "strike_ada"
-    (Constant 1000)
+    (Constant $strike)
     (Let
         "premium_ada"
-        (Constant 100)
+        (Constant $premium)
         (Let
             "notional_btc"
-            (Constant 2)
+            (Constant $notional)
             (Let
                 "threshold"
                 (AddValue
@@ -18,7 +18,7 @@ Let
                 )
                 (Let
                     "margin_ada"
-                    (Constant 300)
+                    (Constant $margin)
                     (When
                         [Case
                             (Deposit

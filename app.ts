@@ -32,6 +32,7 @@ declare global {
         marloweWindow?: () => Promise<Window>
         api: ContractApi
         monaco: any
+        tick: number
     }
 }
 
@@ -71,14 +72,32 @@ if (window.marloweWindow != undefined) {
                 let goToBlocks = mw.document.querySelector('.group')?.querySelector('.btn') as HTMLElement
                 goToBlocks?.click()
                 window.api.state.isMarloweContractGenerated = true
+                window.dispatchEvent(new Event("state"))
             },
             sampleMarloweContract: () => {
                 window.api.state.sample = []
                 window.api.state.isMarloweContractSampled = true
+                window.dispatchEvent(new Event("state"))
 
             }
         }
 
     })
+
+    let poll = async () => {
+        const original = 'https://api.wolframalpha.com/v1/result?appid=6WU6JX-46EP5U9AGX&i=1%20btc%20to%20usd%20number'
+        const url = 'https://corsproxy.io/?' + encodeURIComponent(original)
+
+        let response = fetch(url)
+        let raw = (await (await response).text())
+        let rx = /\d+/g;
+        let res = rx.exec(raw)
+        if (res != null) window.tick = parseInt(res[0]);
+        window.dispatchEvent(new Event("tick"))
+        
+    }
+    
+    setInterval(poll, 1000)
     
 }
+
