@@ -1,0 +1,16 @@
+{
+  "name": "marlowe-wolfram-webdoc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "docs-build": "markdown-docs build docs-src docs",
+    "docs-dev": "markdown-docs dev docs-src"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@gi60s/markdown-docs": "^0.1.2"
+  }
+  
+}
