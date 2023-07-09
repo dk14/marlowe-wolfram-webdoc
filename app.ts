@@ -77,28 +77,28 @@ if (window.marloweWindow != undefined) {
             },
             sampleMarloweContract: () => {
                 //todo check if in simulator already
-                let sendToSimulator = window.document.querySelector('.group')?.children[1] as HTMLElement
+                let sendToSimulator = mw.document.querySelector('.group')?.children[1] as HTMLElement
                 sendToSimulator?.click()
 
-                let startSimulation = window.document.querySelector('.transaction-btns')?.children[1] as HTMLElement
+                let startSimulation = mw.document.querySelector('.transaction-btns')?.children[1] as HTMLElement
                 startSimulation?.click()
 
-                let aliceDeposit = window.document.querySelector('.plus-btn') as HTMLElement
+                let aliceDeposit = mw.document.querySelector('.plus-btn') as HTMLElement
                 aliceDeposit?.click()
 
-                let bobDeposit = window.document.querySelector('.plus-btn') as HTMLElement
+                let bobDeposit = mw.document.querySelector('.plus-btn') as HTMLElement
                 bobDeposit?.click()
 
-                let skipToExercise = window.document.querySelectorAll('.plus-btn')[2] as HTMLElement
+                let skipToExercise = mw.document.querySelectorAll('.plus-btn')[2] as HTMLElement
                 skipToExercise?.click()
 
-                let oracleInput = window.document.querySelector('input.flex-1') as HTMLElement
-                oracleInput.setAttribute("placeholder", "100")
+                let oracleInput = mw.document.querySelector('input.flex-1') as HTMLElement
+                oracleInput?.setAttribute("placeholder", "100")
 
-                let confirm = window.document.querySelector('.plus-btn') as HTMLElement
+                let confirm = mw.document.querySelector('.plus-btn') as HTMLElement
                 confirm?.click()
 
-                let log = window.document.querySelector('.grid-cols-description-location') as HTMLElement
+                let log = mw.document.querySelector('.grid-cols-description-location') as HTMLElement
 
                 window.api.state.sample = []
                 window.api.state.isMarloweContractSampled = true
