@@ -5,7 +5,7 @@ module.exports = {
   },
   site: {
     editSourceUrl: 'https://github.com/dk14/marlowe-wolfram-webdoc/tree/master/docs-src',
-    title: 'Marlowe Oracle Examples',
+    title: 'Wolfram Marlowe Oracle Examples',
     url: 'https://dk14.github.io/marlowe-wolfram-webdoc/'
   },
   template: {

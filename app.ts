@@ -96,8 +96,8 @@ if (window.marloweWindow != undefined) {
         window.dispatchEvent(new Event("tick"))
         
     }
-    
-    setInterval(poll, 1000)
+    poll()
+    setInterval(poll, 10000)
     
 }
 

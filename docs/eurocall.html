@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Marlowe Oracle Examples | Eurocall</title>
+  <title>Wolfram Marlowe Oracle Examples | Eurocall</title>
   
 
   <link rel="icon" href="/marlowe-wolfram-webdoc/favicon.png">
@@ -25,7 +25,7 @@
   <header class="site-header">
     <div class="wrapper">
       <a class="site-title" href="/marlowe-wolfram-webdoc">
-        Marlowe Oracle Examples
+        Wolfram Marlowe Oracle Examples
       </a>
 
       
@@ -65,7 +65,9 @@
         
 
         <div class="post-content"><h1 id="wolfram-oracle">Wolfram Oracle</h1>
-<p>BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" name="lock" >lock</input>)</p>
+<p>BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" name="lock" >lock</input>)
+<br/>
+<a href="https://api.wolframalpha.com/v1/result?appid=6WU6JX-46EP5U9AGX&amp;i=1%20btc%20to%20usd%20number">source: Wolfram Alpha</a></p>
 <script>
     window.addEventListener("tick", () => {
         if (!document.querySelector('#lock').checked) {

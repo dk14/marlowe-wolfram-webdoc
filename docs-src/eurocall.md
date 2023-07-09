@@ -8,6 +8,8 @@ layout: default
 # Wolfram Oracle
 
 BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" name="lock" >lock</input>)
+<br/>
+[source: Wolfram Alpha](https://api.wolframalpha.com/v1/result?appid=6WU6JX-46EP5U9AGX&i=1%20btc%20to%20usd%20number)
 
 <script>
     window.addEventListener("tick", () => {
