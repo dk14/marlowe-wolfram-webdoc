@@ -23,6 +23,7 @@ interface ContractApi {
 interface NotebookState {
     isMarloweContractGenerated: boolean
     isMarloweContractSampled: boolean
+    samplingInProgress: boolean
     sample?: SampledRow[]
 }
 
@@ -33,6 +34,7 @@ declare global {
         api: ContractApi
         monaco: any
         tick: number
+        activeTicker: number
     }
 }
 
@@ -45,7 +47,8 @@ if (window.marloweWindow != undefined) {
         window.api = {
             state: {
                 isMarloweContractGenerated: false,
-                isMarloweContractSampled: false
+                isMarloweContractSampled: false,
+                samplingInProgress: false
             },
             injectMarloweContract: async (c: MarloweContract) => {
                 let marloweHome = mw.document.querySelector(".h-10") as HTMLElement
@@ -77,6 +80,9 @@ if (window.marloweWindow != undefined) {
             },
             sampleMarloweContract: () => {
                 //todo check if in simulator already
+                window.api.state.samplingInProgress = true
+
+
                 let sendToSimulator = mw.document.querySelector('.group')?.children[1] as HTMLElement
                 sendToSimulator?.click()
 
@@ -100,29 +106,41 @@ if (window.marloweWindow != undefined) {
 
                 let log = mw.document.querySelector('.grid-cols-description-location') as HTMLElement
 
+                window.api.state.samplingInProgress = false
                 window.api.state.sample = []
                 window.api.state.isMarloweContractSampled = true
                 window.dispatchEvent(new Event("state"))
 
             }
         }
+        let poll = async () => {
+            const original = 'https://api.wolframalpha.com/v1/result?appid=6WU6JX-46EP5U9AGX&i=1%20btc%20to%20usd%20number'
+            const url = 'https://corsproxy.io/?' + encodeURIComponent(original)
+    
+            let response = fetch(url)
+            let raw = (await (await response).text())
+            let rx = /\d+/g;
+            let res = rx.exec(raw)
+            if (res != null) window.tick = parseInt(res[0]);
+
+            
+            
+            window.dispatchEvent(new Event("tick"))
+            
+        }
+        poll()
+        setInterval(poll, 10000)
+
+        setInterval(() => {
+            let oracleInput = mw.document.querySelector('input.flex-1') as HTMLElement
+            if (oracleInput?.getAttribute("placeholder") == "0" && !window.api.state.samplingInProgress && !mw.document.querySelector('.break-word-span')?.textContent?.includes("DO NOT")) {
+                oracleInput?.setAttribute("placeholder", window.activeTicker.toString())
+            }
+        }, 100)
 
     })
 
-    let poll = async () => {
-        const original = 'https://api.wolframalpha.com/v1/result?appid=6WU6JX-46EP5U9AGX&i=1%20btc%20to%20usd%20number'
-        const url = 'https://corsproxy.io/?' + encodeURIComponent(original)
 
-        let response = fetch(url)
-        let raw = (await (await response).text())
-        let rx = /\d+/g;
-        let res = rx.exec(raw)
-        if (res != null) window.tick = parseInt(res[0]);
-        window.dispatchEvent(new Event("tick"))
-        
-    }
-    poll()
-    setInterval(poll, 10000)
     
 }
 
