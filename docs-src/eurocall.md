@@ -31,6 +31,24 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
             
         }
     })
+    window.addEventListener("sampling-started", () => {
+        document.querySelector("#marlowe-frame").style="display:none"
+        document.querySelector("#sampling-progress").style=""
+    }) 
+
+    window.addEventListener("sampled", () => {
+        document.querySelector("#marlowe-frame").style=""
+        document.querySelector("#sampling-progress").style="display:none"
+        document.querySelector("#plot-alpha-btn").hidden=false
+        document.querySelector("#download-csv-btn").hidden=false
+        document.querySelector("#download-nb-btn").hidden=false
+    }) 
+
+    window.addEventListener("sampling-step", () => {
+        console.log(window.api.state.samplingProgress)
+        document.querySelector("#sampling-progress").value = window.api.state.samplingProgress * 100
+    })
+
     document.querySelector('#ticker').addEventListener('input', function() {
         let input = parseInt(document.querySelector('#ticker').value)
         if (input != null) {
@@ -76,20 +94,21 @@ Let's generate marlowe European Call contract first. Alice and Bob are betting o
     }
 </script>
 
-<button type="button" style="height: 30px" onclick="document.querySelector('#marlowe-frame').style = ''; window.api.injectMarloweContract({template: 'eurocall', terms: extractTerms()}); ">Generate Marlowe contract!</button>
+<button type="button" style="height: 30px" onclick="document.querySelector('#marlowe-frame').style = ''; window.api.injectMarloweContract({template: 'eurocall', terms: extractTerms()}); document.querySelector('#sample-btn').disabled=false">Generate Marlowe contract!</button>
 <br/>
 <br/>
+<progress id="sampling-progress" value="0" max="100" style="display:none"></progress>
 <iframe src="./marlowe.html" title="Marlowe" height="800" width = "100%" id = "marlowe-frame" style = "filter: blur(1.5px) grayscale(80%) hue-rotate(30deg) sepia(10%); pointer-events: none" frameborder="no"></iframe>
 
 # Sampling
 
 Let's sample Marlowe contract and plot the payoff curve
 
-<button type="button" style="height: 30px;" onclick="window.api.sampleMarloweContract().then(() => window.api.embedWolfPlot(document.getElementById('wolf-plot')))">Sample Marlowe contract!</button>
+<button type="button" id="sample-btn" style="height: 30px;" disabled onclick="window.api.sampleMarloweContract().then(() => window.api.embedWolfPlot(document.getElementById('wolf-plot')))">Sample Marlowe contract!</button>
 <br/>
 
-<button type="button" style="height: 30px;" onclick="window.api.plotMarloweContractAlpha(); ">Plot with Wolfram Alpha</button>
-<button type="button" style="height: 30px;" onclick="window.api.downloadSampledContractAsCsv(); ">Download as CSV</button>
-<button type="button" style="height: 30px;" onclick="window.api.downloadWolfNb(); ">Download as Wolfram Notebook</button>
+<button type="button" id="plot-alpha-btn" style="height: 30px;" hidden onclick="window.api.plotMarloweContractAlpha(); ">Plot with Wolfram Alpha</button>
+<button type="button" id="download-csv-btn" style="height: 30px;" hidden onclick="window.api.downloadSampledContractAsCsv(); ">Download as CSV</button>
+<button type="button" id="download-nb-btn" style="height: 30px;" hidden onclick="window.api.downloadWolfNb(); ">Download as Wolfram Notebook</button>
 <br/>
 <div id = "wolf-plot"></div>

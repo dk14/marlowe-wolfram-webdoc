@@ -29,6 +29,7 @@ interface NotebookState {
     isMarloweContractGenerated: boolean
     isMarloweContractSampled: boolean
     samplingInProgress: boolean
+    samplingProgress?: number
     sample?: SampledRow[]
     contract?: MarloweContract
     template?: string
@@ -114,14 +115,17 @@ if (window.marloweWindow != undefined) {
                 window.dispatchEvent(new Event("state"))
             },
             sampleMarloweContract: async () => {
-    
+                window.dispatchEvent(new Event("sampling-started"))
                 window.api.state.samplingInProgress = true
                 window.api.state.sample = []
-                for (let i = window.api.state.contract!.terms.minValue; i <= window.api.state.contract!.terms.maxValue; i+=100) {
+                const step = 100
+                for (let i = window.api.state.contract!.terms.minValue; i <= window.api.state.contract!.terms.maxValue; i+=step) {
                     let c = { ...window.api.state.contract!, terms: {...window.api.state.contract!.terms}, }
 
+                    window.dispatchEvent(new Event("sampling-step"))
                     c.terms.minValue = i
                     c.terms.maxValue = i
+                    window.api.state.samplingProgress = (i - window.api.state.contract!.terms.minValue) / (window.api.state.contract!.terms.maxValue - window.api.state.contract!.terms.minValue)
 
                     await window.api.injectMarloweContract(c, false)
                     console.log(i)
@@ -168,7 +172,8 @@ if (window.marloweWindow != undefined) {
                 
                 window.api.state.isMarloweContractSampled = true
                 window.dispatchEvent(new Event("state"))
-                //window.api.injectMarloweContract(window.api.state.contract!, false)
+                window.dispatchEvent(new Event("sampled"))
+                window.api.injectMarloweContract(window.api.state.contract!, false)
 
 
             },
