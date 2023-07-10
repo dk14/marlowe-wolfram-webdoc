@@ -72,6 +72,7 @@ Cors proxy prefix: <input id = "cors-proxy-prefix" value="https://corsproxy.io/?
 <br/>
 <a href="https://api.wolframalpha.com/v1/result?appid=6WU6JX-46EP5U9AGX&amp;i=1%20btc%20to%20usd%20number">source: Wolfram Alpha</a></p>
 <script>
+    window.i = 0
     window.flag = false
     window.wfAppId = document.querySelector('#wf-app-id').value
     window.corsProxyPrefix = document.querySelector('#cors-proxy-prefix').value
@@ -104,6 +105,11 @@ Cors proxy prefix: <input id = "cors-proxy-prefix" value="https://corsproxy.io/?
     window.addEventListener("sampling-step", () => {
         console.log(window.api.state.samplingProgress)
         document.querySelector("#sampling-progress").value = window.api.state.samplingProgress * 100
+    })
+
+    window.addEventListener("clock", () => {
+        window.i++
+        document.querySelector("#img-loading-placeholder").textContent = `Generating Wolfram Plot${".".repeat(window.i % 5)}`
     })
 
     document.querySelector('#ticker').addEventListener('input', function() {

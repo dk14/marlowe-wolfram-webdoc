@@ -15,6 +15,7 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
 [source: Wolfram Alpha](https://api.wolframalpha.com/v1/result?appid=6WU6JX-46EP5U9AGX&i=1%20btc%20to%20usd%20number)
 
 <script>
+    window.i = 0
     window.flag = false
     window.wfAppId = document.querySelector('#wf-app-id').value
     window.corsProxyPrefix = document.querySelector('#cors-proxy-prefix').value
@@ -47,6 +48,11 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
     window.addEventListener("sampling-step", () => {
         console.log(window.api.state.samplingProgress)
         document.querySelector("#sampling-progress").value = window.api.state.samplingProgress * 100
+    })
+
+    window.addEventListener("clock", () => {
+        window.i++
+        document.querySelector("#img-loading-placeholder").textContent = `Generating Wolfram Plot${".".repeat(window.i % 5)}`
     })
 
     document.querySelector('#ticker').addEventListener('input', function() {

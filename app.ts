@@ -203,6 +203,7 @@ if (window.marloweWindow != undefined) {
                 link.click()
             },
             embedWolfPlot: async (container: HTMLDivElement) => {
+                container.innerHTML = '<span id="img-loading-placeholder"></span>'
                 const query = encodeURIComponent('plot ' + window.api.state.sample.map(row => `(${row.oracleValue}, ${row.alicePayout})`).join(","))
                 const url1 = `https://api.wolframalpha.com/v2/query?input=${query}&appid=${window.wfAppId}&output=JSON`
                 const proxyUrl = window.corsProxyPrefix + encodeURIComponent(url1)
@@ -212,6 +213,7 @@ if (window.marloweWindow != undefined) {
                 let img = document.createElement('img')
                 img.src = url2
                 img.setAttribute("width", "500")
+                container.innerHTML = ''
                 container.appendChild(img)
             }
         }
@@ -230,6 +232,7 @@ if (window.marloweWindow != undefined) {
         }
         poll()
         setInterval(poll, 10000)
+        setInterval(() => window.dispatchEvent(new Event("clock")), 500)
 
     })
 
