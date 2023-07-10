@@ -1,0 +1,15 @@
+Notebook[{Cell[
+BoxData[RowBox[{"ListPlot","[",RowBox[{"{",RowBox[{RowBox[{"{",RowBox[{"1",","," ","1"}],"}"}],","," ",RowBox[{"{",RowBox[{"2",","," ","2"}],"}"}]}],"}"}],",PlotRange -> {{29600, 31000}, Automatic}]"}]],
+"DeployedWLInput",CellAutoOverwrite -> True,GeneratedCell -> True,CellLabel -> "In[7]:=",
+PrivateCellOptions -> {"CellSettings" -> {"UsageTags" -> {{"ListPlot",1}}}},ExpressionUUID -> "4942f694-a47b-4321-8f18-88f7864cbde6"],Cell[
+BoxData[
+FormBox[GraphicsBox[{{},{{TagBox[{Directive[PointSize[0.012833333333333334`],LABColor[
+0.676094128119322`,0.4485405917061707`,0.7359231649869302`],AbsoluteThickness[1.6`]],PointBox[
+{{1.`,1.`},{2.`,2.`}}]},Function[Annotation[Slot[1],"Charting`Private`Tag#1"]]]}},{{},{}}},
+{DisplayFunction -> Identity,DisplayFunction -> Identity,AspectRatio -> NCache[Power[
+GoldenRatio,-1],0.6180339887498948`],Axes -> {True,True},AxesLabel -> {None,None},AxesOrigin -> {0.`,0.`},RuleDelayed[
+DisplayFunction,Identity],Frame -> {{False,False},{False,False}},FrameLabel -> {{None,None},{None,None}},FrameTicks -> {{Automatic,Automatic},{Automatic,Automatic}},GridLines -> {None,None},GridLinesStyle -> Directive[
+GrayLevel[0.5`,0.4`]],Method -> CompressedData["1:eJzNVV1IVEEUNv/KMi21HnpIwoeKTDCpoB5ua6auZS7tYhD1cNs7Vydn72xn7hXXyJR6qDRSKcLKlxCiqH1SigoXBKMfFIoeJML8N4wICoJ+oGbu4rqu65a1D124w5k7M993zneH8607Sg+oy2NiYlg8H/Zhpqux07MDBkH2ZTyw1GBmkxUFaxXqIrGayAe7UyZIgRMZ3qLh2ktSyLEMHhQgVTaInk8NTZHBY9c9BLEkgWfo1CXr2BlyaM3MoSKQ3ZXYyayajkB26phqalyENBfzoBwB4/sgz3w+h6aUxgMHx6oqpQZDNsqwiRobjGoGDjAQS+BBoUwYCkO0R1WRU2cRExJ1FuOKSsJf3a/aPDsFE3A1KBbfQxZTgmFsFGv/gCVSKgDqJlhDbHbdYaRSASGVgmu3AYxCKVVQQJwwuG4iO5ELaXpEXJF6jV3IZiEkzJrHLqb7qRZKsWLmZpQiVmleJb8QKwXYUUaJoSNTHzuuRThxbvVBEDZCdT/E0rnJmiph4D8YVyP/L14iNljyd1NCAbzFG9c33xiXoKU9vW20840EKdd8j7xNk9LchBz8CldxsRlcbRPPV+nPOBy7yrxpD0ck+OR9fKU994UEG470N8buH/NFj6Ol9+CZprPvJDjZVI/Hf770QVyd87j8LZp1HEqqfm29N8w5dmY1dLXxgr6cc22tpUNR5BjKqX/1YWJMgo7bd+u6NK8P8hvvW8/3vI2iVuUD/SV5WVMS2E7/eIIu9kgw2mkZTG6YimIdeYm9z25irlXH0wdbMo/xgj6mZV7Ynh/Nf96cXVnXd3BSgtacTat6lBEf9JXEb055PxbFOrZdP9X6PG5UgpLcqaHBbn53Uw/vnepePB5FjoefHQl9ZRMSrP2eusPRNeCD7A+XE9kd3wK0CjQG4X4F3I+wtkCPEyyBllNoaKZLmR3b7pIJCSyFHEsWgaxVoPno/HneCqVL50GZW8cuDik6WKkMVdzx5uvKYrtVcxJDQQED4WwmPe/pwHu1308iGM7vLXuBSa0W5JQCr1vWEXNQSsRpqkX2o1TzPjBuMp5pnf2qiVsR+DIbIbBuVXipWPfMrNtkCLJRO08bi5k5/M25MF6bbhbqxkgpl4mB/tesfwHcCtKZ"],PlotRange -> {{0.`,2.`},{0.`,2.`}},PlotRangeClipping -> True,PlotRangePadding -> {{Scaled[
+0.02`],Scaled[0.02`]},{Scaled[0.02`],Scaled[0.05`]}},Ticks -> {Automatic,Automatic}}],
+TraditionalForm],TraditionalForm],"Output",CellLabel -> "Out[7]= ",ExpressionUUID -> "d3beca1f-3713-450a-86a2-8dfe596ff90a"]},
+StyleDefinitions -> "WolframAlphaNotebook.nb",FrontEndVersion -> "13.3 for Wolfram Cloud 1.66 (June 16, 2023)"]

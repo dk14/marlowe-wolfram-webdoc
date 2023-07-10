@@ -65,11 +65,17 @@
         
 
         <div class="post-content"><h1 id="wolfram-oracle">Wolfram Oracle</h1>
+<p>Wolfram app-id: <input id = "wf-app-id" value="6WU6JX-46EP5U9AGX"></input>
+<br/>
+Cors proxy prefix: <input id = "cors-proxy-prefix" value="https://corsproxy.io/?"></input></p>
 <p>BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" name="lock" >lock</input>)
 <br/>
 <a href="https://api.wolframalpha.com/v1/result?appid=6WU6JX-46EP5U9AGX&amp;i=1%20btc%20to%20usd%20number">source: Wolfram Alpha</a></p>
 <script>
     window.flag = false
+    window.wfAppId = document.querySelector('#wf-app-id').value
+    window.corsProxyPrefix = document.querySelector('#cors-proxy-prefix').value
+
     window.addEventListener("tick", () => {
         if (!document.querySelector('#lock').checked) {
             document.querySelector('#ticker').value = window.tick
@@ -93,6 +99,12 @@
                 document.querySelector('#maxValue').value = window.tick + 400
             }
         }
+    });
+    document.querySelector('#wf-app-id').addEventListener('input', function() {
+        window.wfAppId = document.querySelector('#wf-app-id').value
+    });
+    document.querySelector('#cors-proxy-prefix').addEventListener('input', function() {
+        window.corsProxyPrefix = document.querySelector('#cors-proxy-prefix').value
     });
 </script>
 
@@ -127,11 +139,13 @@
 
 <h1 id="sampling">Sampling</h1>
 <p>Let&#39;s sample Marlowe contract and plot the payoff curve</p>
-<p><button type="button" style="height: 30px;" onclick="window.api.sampleMarloweContract(); ">Sample Marlowe contract!</button>
+<p><button type="button" style="height: 30px;" onclick="window.api.sampleMarloweContract().then(() => window.api.embedWolfPlot(document.getElementById('wolf-plot')))">Sample Marlowe contract!</button>
 <br/></p>
 <p><button type="button" style="height: 30px;" onclick="window.api.plotMarloweContractAlpha(); ">Plot with Wolfram Alpha</button>
-<button type="button" style="height: 30px;" onclick="window.api.downloadSampledContractAsCsv(); ">Download as CSV</button></p>
-</div>
+<button type="button" style="height: 30px;" onclick="window.api.downloadSampledContractAsCsv(); ">Download as CSV</button>
+<button type="button" style="height: 30px;" onclick="window.api.downloadWolfNb(); ">Download as Wolfram Notebook</button>
+<br/></p>
+<div id = "wolf-plot"></div></div>
       </article>
 
       <footer class="site-footer">

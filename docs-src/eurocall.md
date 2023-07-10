@@ -6,6 +6,9 @@ layout: default
 
 
 # Wolfram Oracle
+Wolfram app-id: <input id = "wf-app-id" value="6WU6JX-46EP5U9AGX"></input>
+<br/>
+Cors proxy prefix: <input id = "cors-proxy-prefix" value="https://corsproxy.io/?"></input>
 
 BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" name="lock" >lock</input>)
 <br/>
@@ -13,6 +16,9 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
 
 <script>
     window.flag = false
+    window.wfAppId = document.querySelector('#wf-app-id').value
+    window.corsProxyPrefix = document.querySelector('#cors-proxy-prefix').value
+
     window.addEventListener("tick", () => {
         if (!document.querySelector('#lock').checked) {
             document.querySelector('#ticker').value = window.tick
@@ -36,6 +42,12 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
                 document.querySelector('#maxValue').value = window.tick + 400
             }
         }
+    });
+    document.querySelector('#wf-app-id').addEventListener('input', function() {
+        window.wfAppId = document.querySelector('#wf-app-id').value
+    });
+    document.querySelector('#cors-proxy-prefix').addEventListener('input', function() {
+        window.corsProxyPrefix = document.querySelector('#cors-proxy-prefix').value
     });
 </script>
 
@@ -73,8 +85,11 @@ Let's generate marlowe European Call contract first. Alice and Bob are betting o
 
 Let's sample Marlowe contract and plot the payoff curve
 
-<button type="button" style="height: 30px;" onclick="window.api.sampleMarloweContract(); ">Sample Marlowe contract!</button>
+<button type="button" style="height: 30px;" onclick="window.api.sampleMarloweContract().then(() => window.api.embedWolfPlot(document.getElementById('wolf-plot')))">Sample Marlowe contract!</button>
 <br/>
 
 <button type="button" style="height: 30px;" onclick="window.api.plotMarloweContractAlpha(); ">Plot with Wolfram Alpha</button>
 <button type="button" style="height: 30px;" onclick="window.api.downloadSampledContractAsCsv(); ">Download as CSV</button>
+<button type="button" style="height: 30px;" onclick="window.api.downloadWolfNb(); ">Download as Wolfram Notebook</button>
+<br/>
+<div id = "wolf-plot"></div>

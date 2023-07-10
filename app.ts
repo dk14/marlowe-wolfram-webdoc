@@ -1,5 +1,6 @@
 import { darkify } from "./util/dr";
 import { processTemplate } from "./util/templates";
+import * as WolframNotebookEmbedder from 'wolfram-notebook-embedder';
 
 
 interface MarloweContract {
@@ -19,6 +20,9 @@ interface ContractApi {
     sampleMarloweContract: () => void
     plotMarloweContractAlpha: () => void
     downloadSampledContractAsCsv: () => void
+    generateWolfNbUri: () => Promise<string>
+    downloadWolfNb: () => void
+    embedWolfPlot: (container: HTMLDivElement) => void
 }
 
 interface NotebookState {
@@ -38,6 +42,8 @@ declare global {
         monaco: any
         tick: number
         activeTicker: number
+        wfAppId: string
+        corsProxyPrefix: string
     }
 }
 
@@ -173,13 +179,40 @@ if (window.marloweWindow != undefined) {
             },
             downloadSampledContractAsCsv: () => {
                 let csvContent = "data:text/csv;charset=utf-8,\noracle,alice,bob\n" + window.api.state.sample.map(row => `${row.oracleValue}, ${row.alicePayout}, ${row.bobPayout}`).join("\n");
-                var encodedUri = encodeURI(csvContent);
+                let encodedUri = encodeURI(csvContent);
                 window.open(encodedUri);
+            },
+            generateWolfNbUri: async () => {
+                let url = window.location.origin + `/marlowe-wolfram-webdoc/notebooks/wolfram-plot.nb`
+                let template = (await (await fetch(url)).text())
+                let rowbox = row => `RowBox[{"{",RowBox[{"${row.oracleValue}",","," ","${row.alicePayout}"}],"}"}]`
+                let points = window.api.state.sample.map(rowbox).join(`,","," ",`);
+                let nb = template.replace(`RowBox[{"{",RowBox[{"1",","," ","1"}],"}"}],","," ",RowBox[{"{",RowBox[{"2",","," ","2"}],"}"}]`, points)
+                let nbContent = "data:text/plain;base64," + btoa(nb)
+                return encodeURI(nbContent)
+            },
+            downloadWolfNb: async () => {
+                let link = document.createElement('a')
+                link.download = 'wolfram-plot.nb'
+                link.href = await window.api.generateWolfNbUri()
+                link.click()
+            },
+            embedWolfPlot: async (container: HTMLDivElement) => {
+                const query = encodeURIComponent('plot ' + window.api.state.sample.map(row => `(${row.oracleValue}, ${row.alicePayout})`).join(","))
+                const url1 = `https://api.wolframalpha.com/v2/query?input=${query}&appid=${window.wfAppId}&output=JSON`
+                const proxyUrl = window.corsProxyPrefix + encodeURIComponent(url1)
+                let result = (await (await fetch(proxyUrl)).json())
+                const url2 = result.queryresult.pods[1].subpods[0].img.src
+                console.log(url2)
+                let img = document.createElement('img')
+                img.src = url2
+                img.setAttribute("width", "500")
+                container.appendChild(img)
             }
         }
         let poll = async () => {
-            const original = 'https://api.wolframalpha.com/v1/result?appid=6WU6JX-46EP5U9AGX&i=1%20btc%20to%20usd%20number'
-            const url = 'https://corsproxy.io/?' + encodeURIComponent(original)
+            const original = `https://api.wolframalpha.com/v1/result?appid=${window.wfAppId}&i=1%20btc%20to%20usd%20number`
+            const url = window.corsProxyPrefix + encodeURIComponent(original)
     
             let response = fetch(url)
             let raw = (await (await response).text())
