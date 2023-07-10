@@ -17,7 +17,8 @@ interface ContractApi {
     state: NotebookState
     injectMarloweContract: (c: MarloweContract, update: boolean) => Promise<void>
     sampleMarloweContract: () => void
-    plotMarloweContract?: (sample: SampledRow[], where: HTMLDivElement) => void
+    plotMarloweContractAlpha: () => void
+    downloadSampledContractAsCsv: () => void
 }
 
 interface NotebookState {
@@ -94,12 +95,9 @@ if (window.marloweWindow != undefined) {
                 } catch {
 
                 }
-
-                
+               
                 await mw.monaco.editor.getModels()[mw.monaco.editor.getModels().length - 1].setValue(toInject)
                 
-                
-
                 let goToBlocks = mw.document.querySelector('.group')?.querySelector('.btn') as HTMLElement
                 goToBlocks?.click()
 
@@ -167,6 +165,16 @@ if (window.marloweWindow != undefined) {
                 //window.api.injectMarloweContract(window.api.state.contract!, false)
 
 
+            },
+            plotMarloweContractAlpha: () => {
+                const query = encodeURIComponent('plot ' + window.api.state.sample.map(row => `(${row.oracleValue}, ${row.alicePayout})`))
+                const url = 'https://www.wolframalpha.com/input?i=' + query
+                window.open(url)
+            },
+            downloadSampledContractAsCsv: () => {
+                let csvContent = "data:text/csv;charset=utf-8,\noracle,alice,bob\n" + window.api.state.sample.map(row => `${row.oracleValue}, ${row.alicePayout}, ${row.bobPayout}`).join("\n");
+                var encodedUri = encodeURI(csvContent);
+                window.open(encodedUri);
             }
         }
         let poll = async () => {
@@ -178,8 +186,6 @@ if (window.marloweWindow != undefined) {
             let rx = /\d+/g;
             let res = rx.exec(raw)
             if (res != null) window.tick = parseInt(res[0]);
-
-            
             
             window.dispatchEvent(new Event("tick"))
             

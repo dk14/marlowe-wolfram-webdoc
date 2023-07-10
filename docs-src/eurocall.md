@@ -74,4 +74,7 @@ Let's generate marlowe European Call contract first. Alice and Bob are betting o
 Let's sample Marlowe contract and plot the payoff curve
 
 <button type="button" style="height: 30px;" onclick="window.api.sampleMarloweContract(); ">Sample Marlowe contract!</button>
-<button type="button" style="height: 30px;" onclick="window.api.sampleMarloweContract(); ">Download as CSV</button>
+<br/>
+
+<button type="button" style="height: 30px;" onclick="window.api.plotMarloweContractAlpha(); ">Plot with Wolfram Alpha</button>
+<button type="button" style="height: 30px;" onclick="window.api.downloadSampledContractAsCsv(); ">Download as CSV</button>
