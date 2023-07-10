@@ -52,7 +52,9 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
 
     window.addEventListener("clock", () => {
         window.i++
-        document.querySelector("#img-loading-placeholder").textContent = `Generating Wolfram Plot${".".repeat(window.i % 5)}`
+        if (document.querySelector("#img-loading-placeholder") != null && document.querySelector("#img-loading-placeholder") != undefined) {
+            document.querySelector("#img-loading-placeholder").textContent = `Generating Wolfram Plot${".".repeat(window.i % 5)}`
+        }
     })
 
     document.querySelector('#ticker').addEventListener('input', function() {
@@ -100,11 +102,25 @@ Let's generate marlowe European Call contract first. Alice and Bob are betting o
     }
 </script>
 
-<button type="button" style="height: 30px" onclick="document.querySelector('#marlowe-frame').style = ''; window.api.injectMarloweContract({template: 'eurocall', terms: extractTerms()}); document.querySelector('#sample-btn').disabled=false">Generate Marlowe contract!</button>
+<button type="button" style="height: 30px" onclick="
+    document.querySelector('#marlowe-frame').style = ''; 
+    window.api.injectMarloweContract({template: 'eurocall', terms: extractTerms()}); 
+    document.querySelector('#sample-btn').disabled=false; 
+    document.querySelector('#plot-alpha-btn').hidden=true;
+    document.querySelector('#download-csv-btn').hidden=true;
+    document.querySelector('#download-nb-btn').hidden=true; 
+    document.querySelector('#wolf-plot').innerHTML=''">
+Generate Marlowe contract!
+</button>
 <br/>
 <br/>
 <progress id="sampling-progress" value="0" max="100" style="display:none"></progress>
-<iframe src="./marlowe.html" title="Marlowe" height="800" width = "100%" id = "marlowe-frame" style = "filter: blur(1.5px) grayscale(80%) hue-rotate(30deg) sepia(10%); pointer-events: none" frameborder="no"></iframe>
+
+<iframe src="./marlowe.html" 
+title="Marlowe" height="800" width = "100%" id = "marlowe-frame" 
+style = "filter: blur(1.5px) grayscale(80%) hue-rotate(30deg) sepia(10%); pointer-events: none" 
+frameborder="no">
+</iframe>
 
 # Sampling
 
