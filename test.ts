@@ -37,10 +37,17 @@ console.log(twistedPublic.oracle + " adaptor oracle public")
 
 let s = api.oracleSignatureSValue(oraclePrivateKeyHex, k, message)
 console.log(s)
-let twistedPrivate = api.twistedPrivate(partyPrivateKeyHex, s)
-console.log(twistedPrivate + " twisted private")
-
 console.log(G.multiply(BigInteger.fromHex(s)).affineX.toString(16).padStart(64, "0") + " adaptor oracle public 2")
+
+let transaction = (100).toString(16).padStart(64, "0")
+let partySigSR = schnorr.sign(partyPrivateKey, Buffer.from(transaction, "hex")).toString("hex").padStart(128, "0")
+let partySigS = partySigSR.slice(0, 64)
+let partySigR = partySigSR.slice(64, 128)
+
+let twistedSigS = api.twistedSignature(partySigS, s)
+//schnorr.verify(Buffer.from(twistedPublic.mu, "hex"), Buffer.from(transaction, "hex"), Buffer.from(twistedSigS + partySigR, "hex"))
+
+
 
 
 assert(true)

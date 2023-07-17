@@ -19,7 +19,7 @@ export interface SchnorrApi {
     oracleSignatureSValue: (oraclePrivHex: string, nonce: string, msgHex: string) => string
 
     twistedPublic: (oraclePbHex: string, partyPbHex: string, msgHex: string, rHex: string) => TwPubKey
-    twistedPrivate: (partyPrivHex: string, sValueHex: string) => string
+    twistedSignature: (partySValueHex: string, sValueHex: string) => string
 }
 
 export const schnorrApi: () => SchnorrApi = () => {
@@ -32,8 +32,8 @@ export const schnorrApi: () => SchnorrApi = () => {
             }
         },
 
-        twistedPrivate: (partyPrivHex: string, sValueHex: string): string => {
-            return BigInteger.fromHex(partyPrivHex).add(BigInteger.fromHex(sValueHex)).mod(n).toString(16)
+        twistedSignature: (partySValueHex: string, sValueHex: string): string => {
+            return BigInteger.fromHex(partySValueHex).add(BigInteger.fromHex(sValueHex)).mod(n).toString(16)
         },
         genNonce: (oraclePrivHex: string, questionHex: string, auxHex: string): string => {
             const aux = Buffer.from(auxHex, 'hex');
