@@ -16,7 +16,8 @@ module.exports = {
        ".js": [".js", ".ts"],
        ".cjs": [".cjs", ".cts"],
        ".mjs": [".mjs", ".mts"]
-      }
+      },
+      fallback: { "assert": require.resolve("assert/") }
     },
     module: {
       rules: [
