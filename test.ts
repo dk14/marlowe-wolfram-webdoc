@@ -32,7 +32,7 @@ console.log(message)
 
 let twistedPublic = api.twistedPublic(oraclePublicKey.toString(16), partyPublicKey.toString(16), message, r)
 console.log(twistedPublic.mu + " twisted public")
-console.log(twistedPublic.oracle + " twisted oracle public")
+console.log(twistedPublic.oracle + " adaptor oracle public")
 
 
 let s = api.oracleSignatureSValue(oraclePrivateKeyHex, k, message)
@@ -40,7 +40,7 @@ console.log(s)
 let twistedPrivate = api.twistedPrivate(partyPrivateKeyHex, s)
 console.log(twistedPrivate + " twisted private")
 
-console.log(G.multiply(BigInteger.fromHex(s)).affineX.toString(16).padStart(64, "0") + " twisted oracle public 2")
+console.log(G.multiply(BigInteger.fromHex(s)).affineX.toString(16).padStart(64, "0") + " adaptor oracle public 2")
 
 
 assert(true)
