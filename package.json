@@ -6,16 +6,21 @@
   "scripts": {
     "docs-build": "markdown-docs build docs-src docs",
     "docs-dev": "markdown-docs dev docs-src",
-    "dev-watch": "webpack watch"
+    "dev-watch": "webpack watch",
+    "test": "npx ts-node test.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "assert": "^2.0.0",
+    "bigi": "^1.4.2",
+    "bip-schnorr": "^0.6.7",
     "bip32": "^4.0.0",
     "bitcoinjs-lib": "^6.1.3",
     "darkreader": "^4.9.58",
     "ecpair": "^2.1.0",
+    "ecurve": "^1.0.6",
+    "safe-buffer": "^5.2.1",
     "schnorr-adaptor-points": "^0.1.0",
     "tiny-secp256k1": "^2.2.2",
     "util": "^0.12.5",
