@@ -43,23 +43,83 @@ console.log(s + " = oracle s for message " + message)
 assert(G.multiply(BigInteger.fromHex(s)).affineX.toString(16).padStart(64, "0") === p)
 
 let transaction = (100).toString(16).padStart(64, "0")
+let transactionBuf = Buffer.from(transaction, "hex")
+
+let pBuf = Buffer.from(p, "hex")
+
 let adaptedOracleS = api.signatureSValue(s, k, transaction)
-schnorr.verify(Buffer.from(p, "hex"), Buffer.from(transaction, "hex"), Buffer.from(r + adaptedOracleS, "hex"))
+let adaptedOracleSig = Buffer.from(r + adaptedOracleS, "hex")
+schnorr.verify(pBuf, transactionBuf, adaptedOracleSig)
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-let muKeys = [Buffer.from(p, "hex"), Buffer.from(partyPublicKey.toString(16), "hex")]
-let twistedMu = muSig.pubKeyCombine(muKeys, muSig.computeEll(muKeys)).affineX
-let twistedMuBuf = convert.intToBuffer(twistedMu)
+let partySecretBigi = BigInteger.fromHex(partyPrivateKey.toString(16))
+let sBigi = BigInteger.fromHex(s)
+let partyPkBuf = Buffer.from(partyPublicKey.toString(16), "hex")
 
-let partyS = api.signatureSValue(partyPrivateKeyHex, k, transaction)
-let muNonces = convert.intToBuffer(math.liftX(Buffer.from(r, "hex")).add(math.liftX(Buffer.from(r, "hex"))).affineX)
-let muSignature = muSig.partialSigCombine(muNonces, [BigInteger.fromHex(adaptedOracleS), BigInteger.fromHex(partyS)])
-//schnorr.verify(twistedMuBuf, Buffer.from(transaction, "hex"), muSignature)
+
+let signature1 = schnorr.sign(partySecretBigi, transactionBuf)
+schnorr.verify(partyPkBuf, transactionBuf, signature1)
+
+let signature2 = schnorr.sign(sBigi, transactionBuf)
+schnorr.verify(pBuf, transactionBuf, signature2)
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+import * as multisig from './util/mu-sig'
+
+let sigExample = multisig.sign(
+    '846f34fdb2345f4bf932cb4b7d278fb3af24f44224fb52ae551781c3a3cad68a', 
+    'cd836b1d42c51d80cef695a14502c21d2c3c644bc82f6a7052eb29247cf61f4f', 
+    'add2b25e2d356bec3770305391cbc80cab3a40057ad836bcb49ef3eed74a3fee',
+    '0a1645eef5a10e1f5011269abba9fd85c4f0cc70820d6f102fb7137f2988ad78',
+    convert.hash(Buffer.from('muSig is awesome!', 'utf8'))
+)
+
+console.log(sigExample)
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------
 
 
 assert(true)
 
 console.log('Hello')
+
+import * as bitcoin from "bitcoinjs-lib"
+import * as ecc from 'tiny-secp256k1';
+bitcoin.initEccLib(ecc);
+
+const net = bitcoin.networks.testnet
+const psbt = new bitcoin.Psbt({ network: net})
+
+const p2pktr = bitcoin.payments.p2tr({
+    pubkey: Buffer.from(p, "hex"),
+    network: net
+  })
+
+const txid = "0c387ef5a1c7b197f357dfd7679a5fb0bb784752c710c06654b80b94155b2777"
+const vout = 0
+
+psbt.addInput({
+    hash: txid,
+    index: vout,
+    witnessUtxo: { value: 100, script: p2pktr.output! },
+    tapInternalKey: Buffer.from(p, "hex")
+});
+
+psbt.addOutput({
+    address: "mohjSavDdQYHRYXcS3uS6ttaHP8amyvX78", // faucet address
+    value: 150
+});
+
+//https://github.com/bitcoinjs/bitcoinjs-lib/issues/1027
+
+//psbt.signInput()
+//psbt.finalizeAllInputs()
+//psbt.extractTransaction().toHex
