@@ -82,6 +82,20 @@ let sigExample = multisig.sign(
 
 console.log(sigExample)
 
+let muSignature = multisig.sign(
+    partyPublicKey.toString(16), 
+    p, 
+    partyPrivateKey.toString(16),
+    s,
+    transactionBuf
+)
+console.log(muSignature)
+
+const pkCombined = muSig.pubKeyCombine([partyPkBuf, pBuf]);
+let pubKeyCombined = convert.intToBuffer(pkCombined.affineX);
+
+schnorr.verify(pubKeyCombined, transactionBuf, Buffer.from(muSignature, "hex"))
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------
