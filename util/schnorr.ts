@@ -9,31 +9,20 @@ const concat = Buffer.concat;
 const G = curve.G;
 const n = curve.n;
 
-type TwPubKey = {
-    oracle: string
-    mu: string
-}
 
 export interface SchnorrApi {
     genNonce: (oraclePrivHex: string, questionHex: string, auxHex: string) => string
     signatureSValue: (privHex: string, nonce: string, msgHex: string) => string
 
-    twistedPublic: (oraclePbHex: string, partyPbHex: string, msgHex: string, rHex: string) => TwPubKey
-    add: (partySValueHex: string, sValueHex: string) => string
+    adaptorPublic: (oraclePbHex: string, msgHex: string, rHex: string) => string
 }
 
 export const schnorrApi: () => SchnorrApi = () => {
     return {
-        twistedPublic: (oraclePbHex: string, partyPbHex: string, msgHex: string, rHex: string): TwPubKey => {
+        adaptorPublic: (oraclePbHex: string, msgHex: string, rHex: string): string => {
             const pubInt = convert.bufferToInt(adaptor.createAdaptorPoint([Buffer.from(oraclePbHex, 'hex')], [Buffer.from(msgHex, 'hex')], [Buffer.from(rHex, 'hex')]))
-            return {
-                oracle: pubInt.toString(16),
-                mu: pubInt.add(BigInteger.fromHex(partyPbHex)).mod(n).toString(16)
-            }
-        },
-
-        add: (partySValueHex: string, sValueHex: string): string => {
-            return BigInteger.fromHex(partySValueHex).add(BigInteger.fromHex(sValueHex)).mod(n).toString(16)
+    
+            return pubInt.toString(16)
         },
         genNonce: (oraclePrivHex: string, questionHex: string, auxHex: string): string => {
             const aux = Buffer.from(auxHex, 'hex');
