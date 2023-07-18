@@ -35,17 +35,23 @@ console.log(twistedPublic.mu + " twisted public")
 console.log(twistedPublic.oracle + " adaptor oracle public")
 
 
-let s = api.oracleSignatureSValue(oraclePrivateKeyHex, k, message)
+let s = api.signatureSValue(oraclePrivateKeyHex, k, message)
 console.log(s)
 console.log(G.multiply(BigInteger.fromHex(s)).affineX.toString(16).padStart(64, "0") + " adaptor oracle public 2")
 
 let transaction = (100).toString(16).padStart(64, "0")
-let partySigSR = schnorr.sign(partyPrivateKey, Buffer.from(transaction, "hex")).toString("hex").padStart(128, "0")
-let partySigS = partySigSR.slice(0, 64)
-let partySigR = partySigSR.slice(64, 128)
+//let partySigSR = schnorr.sign(partyPrivateKey, Buffer.from(transaction, "hex")).toString("hex").padStart(128, "0")
+let partyS = api.signatureSValue(partyPrivateKeyHex, k, transaction)
+let adaptedOracleS = api.signatureSValue(s, k, transaction)
+let muS = api.add(partyS, adaptedOracleS)
+let muR = api.add(r, r)
 
-let twistedSigS = api.twistedSignature(partySigS, s)
-//schnorr.verify(Buffer.from(twistedPublic.mu, "hex"), Buffer.from(transaction, "hex"), Buffer.from(twistedSigS + partySigR, "hex"))
+//let partySigS = partySigSR.slice(0, 64)
+//let partySigR = G.multiply(BigInteger.fromHex(s)).affineX.toString(16).padStart(64, "0")
+
+//let twistedSigS = api.twistedSignature(partySigS, s)
+schnorr.verify(Buffer.from(twistedPublic.oracle, "hex"), Buffer.from(transaction, "hex"), Buffer.from(r + adaptedOracleS, "hex"))
+//schnorr.verify(Buffer.from(twistedPublic.mu, "hex"), Buffer.from(transaction, "hex"), Buffer.from(r + muS, "hex"))
 
 
 

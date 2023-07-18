@@ -16,10 +16,10 @@ type TwPubKey = {
 
 export interface SchnorrApi {
     genNonce: (oraclePrivHex: string, questionHex: string, auxHex: string) => string
-    oracleSignatureSValue: (oraclePrivHex: string, nonce: string, msgHex: string) => string
+    signatureSValue: (privHex: string, nonce: string, msgHex: string) => string
 
     twistedPublic: (oraclePbHex: string, partyPbHex: string, msgHex: string, rHex: string) => TwPubKey
-    twistedSignature: (partySValueHex: string, sValueHex: string) => string
+    add: (partySValueHex: string, sValueHex: string) => string
 }
 
 export const schnorrApi: () => SchnorrApi = () => {
@@ -32,7 +32,7 @@ export const schnorrApi: () => SchnorrApi = () => {
             }
         },
 
-        twistedSignature: (partySValueHex: string, sValueHex: string): string => {
+        add: (partySValueHex: string, sValueHex: string): string => {
             return BigInteger.fromHex(partySValueHex).add(BigInteger.fromHex(sValueHex)).mod(n).toString(16)
         },
         genNonce: (oraclePrivHex: string, questionHex: string, auxHex: string): string => {
@@ -50,8 +50,8 @@ export const schnorrApi: () => SchnorrApi = () => {
             const kPrime = convert.bufferToInt(rand).mod(n);
             return kPrime.toString(16)
         },
-        oracleSignatureSValue: (oraclePrivHex: string, nonce: string, msgHex: string): string => {
-            const privKey = BigInteger.fromHex(oraclePrivHex)
+        signatureSValue: (privHex: string, nonce: string, msgHex: string): string => {
+            const privKey = BigInteger.fromHex(privHex)
             const kPrime = BigInteger.fromHex(nonce);
             const m = Buffer.from(msgHex, 'hex')
 
