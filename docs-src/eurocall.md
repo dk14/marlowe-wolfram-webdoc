@@ -58,7 +58,9 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
         }
         try {
             document.querySelector("#oracle-public-key").textContent = window.api.schnorrApi().getPk(document.querySelector("#oracle-secret").value)
-            let question =  window.api.schnorrApi().hashString(document.querySelector("#oracle-answer").textContent)//"1111111".padStart(64, "0")
+            let question =  window.api.schnorrApi().hashString(document.querySelector("#oracle-question").value)//"1111111".padStart(64, "0")
+            //console.log("question = " + document.querySelector("#oracle-question").value)
+            //console.log("questionhash = " + question)
             document.querySelector("#oracle-k-value").textContent = window.api.schnorrApi().genNonce(document.querySelector("#oracle-secret").value, question, "C87AA53824B4D7AE2EB035A2B5BBBCCC080E76CDC6D1692C4B0B62D798E6D906")
             document.querySelector("#oracle-r-value").textContent = window.api.schnorrApi().getPk(document.querySelector("#oracle-k-value").textContent)
             
@@ -154,7 +156,7 @@ Let's sample Marlowe contract and plot the payoff curve
 
 # Prepare Oracle R and s values
 
-Oracle quesion: "" <input id = "oracle-question" value="What is the price of BTC in USD" size = 80></input>
+Oracle quesion: <input id = "oracle-question" value="What is the price of BTC in USD" size = 80></input>
 <br/>
 Oracle secret (hex): <br/><input id = "oracle-secret" value="B7E151628AED2A6ABF7158809CF4F3C762E7160F38B4DA56A784D9045190CFEF" size = 80></input>
 
