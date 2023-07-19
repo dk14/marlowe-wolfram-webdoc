@@ -59,7 +59,7 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
         if (document.querySelector("#img-loading-placeholder") != null && document.querySelector("#img-loading-placeholder") != undefined) {
             document.querySelector("#img-loading-placeholder").textContent = `Generating Wolfram Plot${".".repeat(window.i % 5)}`
         }
-        //try {
+        try {
 
             
             document.querySelector("#oracle-public-key").textContent = window.api.schnorrApi().getPk(document.querySelector("#oracle-secret").value)
@@ -107,8 +107,36 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
 
             document.querySelector("#opening-tx-id").textContent = openingTx.txid
             document.querySelector("#opening-hex").textContent = openingTx.hex
+
+            let multiIn = {
+                "txid": openingTx.txid,
+                "vout": 0,
+                "secrets": [aliceSecret, bobSecret]
+            }
+
+            let closingTx = window.api.txApi().genClosingTx(multiIn, alicePk, bobPk, aliceAmountIn, bobAmountIn)
+
+            document.querySelector("#closing-tx-id").textContent = closingTx.txid
+            document.querySelector("#closing-hex").textContent = closingTx.hex
+
+
+            let disputeTx = window.api.txApi().genAliceCet(multiIn, alicePk, bobPk, document.querySelector("#twisted-pk").textContent, aliceAmountIn, bobAmountIn)
+
+            document.querySelector("#dispute-tx-id").textContent = disputeTx.txid
+            document.querySelector("#dispute-hex").textContent = disputeTx.hex
+
+            let redemptionIn = {
+                "txid": disputeTx.txid,
+                "vout": 0,
+                "secrets": [aliceSecret]
+            }
+
+            let redemptionTx = window.api.txApi().genAliceCetRedemption(redemptionIn, document.querySelector("#twisted-pk").textContent, alicePk, document.querySelector("#oracle-s-value").textContent, aliceAmountIn)
+
+            document.querySelector("#dispute-red-tx-id").textContent = redemptionTx.txid
+            document.querySelector("#dispute-red-hex").textContent = redemptionTx.hex
             
-        //} catch {}
+        } catch {}
         
 
     })

@@ -54,7 +54,7 @@ function schnorrSignerSingle(pk, secret: Buffer): Signer {
     }
 }
 
-function schnorrSignerMulti(pk1, pk2, secret1: Buffer, secret2: Buffer): Signer {
+function schnorrSignerMulti(pk1, pk2, secret1: string, secret2: string): Signer {
     
     const pkCombined = muSig.pubKeyCombine([Buffer.from(pk1, "hex"), Buffer.from(pk2, "hex")]);
     let pubKeyCombined = convert.intToBuffer(pkCombined.affineX);
@@ -66,10 +66,10 @@ function schnorrSignerMulti(pk1, pk2, secret1: Buffer, secret2: Buffer): Signer 
         },
         signSchnorr(hash: Buffer): Buffer {
             let muSignature = multisig.sign(pk1, pk2, 
-                convert.bufferToInt(secret1.toString("hex")),
-                convert.bufferToInt(secret2.toString("hex")),
-                hash.toString("hex"))
-            return muSignature
+                secret1,
+                secret2,
+                hash)
+            return Buffer.from(muSignature, "hex")
         },
         getPublicKey(): Buffer {
             return pubKeyCombined
@@ -140,7 +140,7 @@ export const txApi: (schnorrApi: SchnorrApi) => TxApi = (schnorrApi) => {
             });
 
             psbt.signInput(0, schnorrSignerMulti(alicePk, bobPk, 
-                Buffer.from(multiIn.secrets[0], "hex"), Buffer.from(multiIn.secrets[1], "hex")))
+                multiIn.secrets[0], multiIn.secrets[1]))
             psbt.finalizeAllInputs()
             
             return {
@@ -176,8 +176,8 @@ export const txApi: (schnorrApi: SchnorrApi) => TxApi = (schnorrApi) => {
             });
 
             psbt.signInput(0, schnorrSignerMulti(alicePk, bobPk, 
-                Buffer.from(multiIn.secrets[0], "hex"), 
-                Buffer.from(multiIn.secrets[1], "hex")))
+                multiIn.secrets[0], 
+                multiIn.secrets[1]))
             psbt.finalizeAllInputs()
             
             return {
@@ -205,8 +205,10 @@ export const txApi: (schnorrApi: SchnorrApi) => TxApi = (schnorrApi) => {
             });
 
             psbt.signInput(0, schnorrSignerMulti(alicePk, adaptorPk, 
-                Buffer.from(aliceOracleIn.secrets[0], "hex"),
-                Buffer.from(oracleS, "hex")))
+                aliceOracleIn.secrets[0],
+                oracleS))
+
+            psbt.finalizeAllInputs()
 
             return {
                 txid: psbt.extractTransaction().getId(),
