@@ -1,6 +1,6 @@
 import { darkify } from "./util/dr";
 import { processTemplate } from "./util/templates";
-//import { SchnorrApi, schnorrApi } from "./util/schnorr"
+import { SchnorrApi, schnorrApi } from "./util/schnorr"
 
 
 interface MarloweContract {
@@ -23,7 +23,7 @@ interface ContractApi {
     generateWolfNbUri: () => Promise<string>
     downloadWolfNb: () => void
     embedWolfPlot: (container: HTMLDivElement) => void
-    //schnorrApi: () => SchnorrApi
+    schnorrApi: () => SchnorrApi
 }
 
 interface NotebookState {
@@ -63,7 +63,7 @@ if (window.marloweWindow != undefined) {
                 isMarloweContractSampled: false,
                 samplingInProgress: false
             },
-            //schnorrApi: schnorrApi,
+            schnorrApi: schnorrApi,
             injectMarloweContract: async (c: MarloweContract, updateState = true) => {
                 if (updateState) {
                     window.api.state.contract = c

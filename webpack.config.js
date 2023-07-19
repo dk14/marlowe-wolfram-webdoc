@@ -1,4 +1,5 @@
 const path = require('path');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 module.exports = {
     mode: "development",
@@ -24,5 +25,8 @@ module.exports = {
         // all files with a `.ts`, `.cts`, `.mts` or `.tsx` extension will be handled by `ts-loader`
         { test: /\.([cm]?ts|tsx)$/, loader: "ts-loader" }
       ]
-    }
+    }, 
+    plugins: [
+      new NodePolyfillPlugin()
+    ]
   };
