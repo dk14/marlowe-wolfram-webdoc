@@ -239,7 +239,7 @@ if (window.marloweWindow != undefined && !window.isMarlowe) {
         }
         poll()
         setInterval(poll, 10000)
-        setInterval(() => window.dispatchEvent(new Event("clock")), 1500)
+        setInterval(() => window.dispatchEvent(new Event("clock")), 500)
 
     })
 
