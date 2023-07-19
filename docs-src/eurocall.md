@@ -34,13 +34,16 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
         }
     })
     window.addEventListener("sampling-started", () => {
+        let height = document.querySelector("#marlowe-frame").clientHeight
         document.querySelector("#marlowe-frame").style="display:none"
+        document.querySelector("#progress-offset").style=`height:${height}px`
         document.querySelector("#sampling-progress").style=""
     }) 
 
     window.addEventListener("sampled", () => {
         document.querySelector("#marlowe-frame").style=""
         document.querySelector("#sampling-progress").style="display:none"
+        document.querySelector("#progress-offset").style="display:none"
         document.querySelector("#plot-alpha-btn").hidden=false
         document.querySelector("#download-csv-btn").hidden=false
         document.querySelector("#download-nb-btn").hidden=false
@@ -56,7 +59,9 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
         if (document.querySelector("#img-loading-placeholder") != null && document.querySelector("#img-loading-placeholder") != undefined) {
             document.querySelector("#img-loading-placeholder").textContent = `Generating Wolfram Plot${".".repeat(window.i % 5)}`
         }
-        try {
+        //try {
+
+            
             document.querySelector("#oracle-public-key").textContent = window.api.schnorrApi().getPk(document.querySelector("#oracle-secret").value)
             let question =  window.api.schnorrApi().hashString(document.querySelector("#oracle-question").value)//"1111111".padStart(64, "0")
             //console.log("question = " + document.querySelector("#oracle-question").value)
@@ -72,8 +77,38 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
             document.querySelector("#twisted-pk").textContent = window.api.schnorrApi().adaptorPublic(document.querySelector("#oracle-public-key").textContent, answer, document.querySelector("#oracle-r-value").textContent)
 
             document.querySelector("#oracle-s-value").textContent = window.api.schnorrApi().signatureSValue(document.querySelector("#oracle-secret").value, document.querySelector("#oracle-k-value").textContent, answer)
+
+            let aliceAmountIn = parseInt(document.querySelector("#alice-amount-in").value)
+            let aliceSecret = document.querySelector("#alice-secret").value
+            let aliceTxId = document.querySelector("#alice-tx-id").value
+            let aliceVout = parseInt(document.querySelector("#alice-vout").value)
+
+            let bobAmountIn = parseInt(document.querySelector("#bob-amount-in").value)
+            let bobSecret = document.querySelector("#bob-secret").value
+            let bobTxId = document.querySelector("#bob-tx-id").value
+            let bobVout = parseInt(document.querySelector("#bob-vout").value)
+
+            let aliceIn = {
+                "txid": aliceTxId,
+                "vout": aliceVout,
+                "secrets": [aliceSecret]
+            }
+
+            let bobIn = {
+                "txid": bobTxId,
+                "vout": bobVout,
+                "secrets": [bobSecret]
+            }
+
+            let alicePk = window.api.schnorrApi().getPk(aliceSecret)
+            let bobPk = window.api.schnorrApi().getPk(bobSecret)
+
+            let openingTx = window.api.txApi().genOpeningTx(aliceIn, bobIn, alicePk, bobPk, aliceAmountIn, bobAmountIn)
+
+            document.querySelector("#opening-tx-id").textContent = openingTx.txid
+            document.querySelector("#opening-hex").textContent = openingTx.hex
             
-        } catch {}
+        //} catch {}
         
 
     })
@@ -133,6 +168,7 @@ Generate Marlowe contract!
 </button>
 <br/>
 <br/>
+<div id="progress-offset" style="display:none"></div>
 <progress id="sampling-progress" value="0" max="100" style="display:none"></progress>
 
 <iframe src="./marlowe.html" 
@@ -154,7 +190,7 @@ Let's sample Marlowe contract and plot the payoff curve
 <br/>
 <div id = "wolf-plot"></div>
 
-# Prepare Oracle R and s values
+# Prepare Oracle R and s values for Bitcoin DLC
 
 Oracle quesion: <input id = "oracle-question" value="What is the price of BTC in USD" size = 80></input>
 <br/>
@@ -179,3 +215,30 @@ When the answer is ready...<br/> Oracle publishes s-value (signature): <br/><spa
 <br/>
 
 This value is gonna be used as a secret (private key corresponding to adaptor public key) to co-sign CET transactions in case of dispute.
+
+# Prepare Transactions for Bitcoin DLC
+
+
+Alice: 
+* secret (hex): <br/><input id = "alice-secret" value="C90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B14E5C9" size = 80></input>
+* utxo value: <input type="number" id="alice-amount-in" name="quantity" min="1" max="100000" value="100"></input>
+* txid (hex): <br/><input id = "alice-tx-id" value="6220e8113cb985b6c9bef8acb43b7573ba7f6b3230f27339d3d357ead51f65cc" size = 80></input>
+* vout: <input type="number" id="alice-vout" name="quantity" min="0" max="100" value="0"></input>
+
+Bob:
+* secret (hex): <br/><input id = "bob-secret" value="C90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B14E5C9" size = 80></input>
+* utxo value: <input type="number" id="bob-amount-in" name="quantity" min="1" max="100000" value="100"></input>
+* txid (hex): <br/><input id = "bob-tx-id" value="6220e8113cb985b6c9bef8acb43b7573ba7f6b3230f27339d3d357ead51f65cc" size = 80></input>
+* vout: <input type="number" id="bob-vout" name="quantity" min="0" max="100" value="1"></input>
+
+Opening TxId: <br/><span id = "opening-tx-id"></span><br/>
+Opening Hex: <br/><span id = "opening-hex"></span><br/>
+
+Closing TxId: <br/><span id = "closing-tx-id"></span><br/>
+Closing Hex: <br/><span id = "closing-hex"></span><br/>
+
+Dispute CET TxId: <br/><span id = "dispute-tx-id"></span><br/>
+Dispute CET Hex: <br/><span id = "dispute-hex"></span><br/>
+
+Dispute Redemption TxId: <br/><span id = "dispute-red-tx-id"></span><br/>
+Dispute Redemption Hex: <br/><span id = "dispute-red-hex"></span><br/>

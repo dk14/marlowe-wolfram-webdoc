@@ -60,7 +60,7 @@
         
         <div>
           <p><strong>Page Content</strong></p>
-          <div class="section-nav"><ul class="toc"><li><a href="#wolfram-oracle">Wolfram Oracle</a></li><li><a href="#marlowe-contract">Marlowe Contract</a></li><li><a href="#sampling">Sampling</a></li><li><a href="#prepare-oracle-r-and-s-values">Prepare Oracle R and s values</a></li></ul></div>
+          <div class="section-nav"><ul class="toc"><li><a href="#wolfram-oracle">Wolfram Oracle</a></li><li><a href="#marlowe-contract">Marlowe Contract</a></li><li><a href="#sampling">Sampling</a></li><li><a href="#prepare-oracle-r-and-s-values-for-bitcoin-dlc">Prepare Oracle R and s values for Bitcoin DLC</a></li><li><a href="#prepare-transactions-for-bitcoin-dlc">Prepare Transactions for Bitcoin DLC</a></li></ul></div>
         </div>
         
 
@@ -91,13 +91,16 @@ Cors proxy prefix: <input id = "cors-proxy-prefix" value="https://corsproxy.io/?
         }
     })
     window.addEventListener("sampling-started", () => {
+        let height = document.querySelector("#marlowe-frame").clientHeight
         document.querySelector("#marlowe-frame").style="display:none"
+        document.querySelector("#progress-offset").style=`height:${height}px`
         document.querySelector("#sampling-progress").style=""
     }) 
 
     window.addEventListener("sampled", () => {
         document.querySelector("#marlowe-frame").style=""
         document.querySelector("#sampling-progress").style="display:none"
+        document.querySelector("#progress-offset").style="display:none"
         document.querySelector("#plot-alpha-btn").hidden=false
         document.querySelector("#download-csv-btn").hidden=false
         document.querySelector("#download-nb-btn").hidden=false
@@ -113,7 +116,9 @@ Cors proxy prefix: <input id = "cors-proxy-prefix" value="https://corsproxy.io/?
         if (document.querySelector("#img-loading-placeholder") != null && document.querySelector("#img-loading-placeholder") != undefined) {
             document.querySelector("#img-loading-placeholder").textContent = `Generating Wolfram Plot${".".repeat(window.i % 5)}`
         }
-        try {
+        //try {
+
+
             document.querySelector("#oracle-public-key").textContent = window.api.schnorrApi().getPk(document.querySelector("#oracle-secret").value)
             let question =  window.api.schnorrApi().hashString(document.querySelector("#oracle-question").value)//"1111111".padStart(64, "0")
             //console.log("question = " + document.querySelector("#oracle-question").value)
@@ -130,7 +135,37 @@ Cors proxy prefix: <input id = "cors-proxy-prefix" value="https://corsproxy.io/?
 
             document.querySelector("#oracle-s-value").textContent = window.api.schnorrApi().signatureSValue(document.querySelector("#oracle-secret").value, document.querySelector("#oracle-k-value").textContent, answer)
 
-        } catch {}
+            let aliceAmountIn = parseInt(document.querySelector("#alice-amount-in").value)
+            let aliceSecret = document.querySelector("#alice-secret").value
+            let aliceTxId = document.querySelector("#alice-tx-id").value
+            let aliceVout = parseInt(document.querySelector("#alice-vout").value)
+
+            let bobAmountIn = parseInt(document.querySelector("#bob-amount-in").value)
+            let bobSecret = document.querySelector("#bob-secret").value
+            let bobTxId = document.querySelector("#bob-tx-id").value
+            let bobVout = parseInt(document.querySelector("#bob-vout").value)
+
+            let aliceIn = {
+                "txid": aliceTxId,
+                "vout": aliceVout,
+                "secrets": [aliceSecret]
+            }
+
+            let bobIn = {
+                "txid": bobTxId,
+                "vout": bobVout,
+                "secrets": [bobSecret]
+            }
+
+            let alicePk = window.api.schnorrApi().getPk(aliceSecret)
+            let bobPk = window.api.schnorrApi().getPk(bobSecret)
+
+            let openingTx = window.api.txApi().genOpeningTx(aliceIn, bobIn, alicePk, bobPk, aliceAmountIn, bobAmountIn)
+
+            document.querySelector("#opening-tx-id").textContent = openingTx.txid
+            document.querySelector("#opening-hex").textContent = openingTx.hex
+
+        //} catch {}
 
 
     })
@@ -188,8 +223,10 @@ Cors proxy prefix: <input id = "cors-proxy-prefix" value="https://corsproxy.io/?
 Generate Marlowe contract!
 </button>
 <br/>
-<br/>
-<progress id="sampling-progress" value="0" max="100" style="display:none"></progress></p>
+<br/></p>
+<div id="progress-offset" style="display:none"></div>
+<progress id="sampling-progress" value="0" max="100" style="display:none"></progress>
+
 <iframe src="./marlowe.html" 
 title="Marlowe" height="800" width = "100%" id = "marlowe-frame" 
 style = "filter: blur(1.5px) grayscale(80%) hue-rotate(30deg) sepia(10%); pointer-events: none" 
@@ -206,7 +243,7 @@ frameborder="no">
 <br/></p>
 <div id = "wolf-plot"></div>
 
-<h1 id="prepare-oracle-r-and-s-values">Prepare Oracle R and s values</h1>
+<h1 id="prepare-oracle-r-and-s-values-for-bitcoin-dlc">Prepare Oracle R and s values for Bitcoin DLC</h1>
 <p>Oracle quesion: <input id = "oracle-question" value="What is the price of BTC in USD" size = 80></input>
 <br/>
 Oracle secret (hex): <br/><input id = "oracle-secret" value="B7E151628AED2A6ABF7158809CF4F3C762E7160F38B4DA56A784D9045190CFEF" size = 80></input></p>
@@ -223,6 +260,29 @@ Oracle secret (hex): <br/><input id = "oracle-secret" value="B7E151628AED2A6ABF7
 <em>(Note: signature is derived from pre-commited k-value, thus R-value part would be commited R-value as well)</em>
 <br/></p>
 <p>This value is gonna be used as a secret (private key corresponding to adaptor public key) to co-sign CET transactions in case of dispute.</p>
+<h1 id="prepare-transactions-for-bitcoin-dlc">Prepare Transactions for Bitcoin DLC</h1>
+<p>Alice: </p>
+<ul>
+<li>secret (hex): <br/><input id = "alice-secret" value="C90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B14E5C9" size = 80></input></li>
+<li>utxo value: <input type="number" id="alice-amount-in" name="quantity" min="1" max="100000" value="100"></input></li>
+<li>txid (hex): <br/><input id = "alice-tx-id" value="6220e8113cb985b6c9bef8acb43b7573ba7f6b3230f27339d3d357ead51f65cc" size = 80></input></li>
+<li>vout: <input type="number" id="alice-vout" name="quantity" min="0" max="100" value="0"></input></li>
+</ul>
+<p>Bob:</p>
+<ul>
+<li>secret (hex): <br/><input id = "bob-secret" value="C90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B14E5C9" size = 80></input></li>
+<li>utxo value: <input type="number" id="bob-amount-in" name="quantity" min="1" max="100000" value="100"></input></li>
+<li>txid (hex): <br/><input id = "bob-tx-id" value="6220e8113cb985b6c9bef8acb43b7573ba7f6b3230f27339d3d357ead51f65cc" size = 80></input></li>
+<li>vout: <input type="number" id="bob-vout" name="quantity" min="0" max="100" value="1"></input></li>
+</ul>
+<p>Opening TxId: <br/><span id = "opening-tx-id"></span><br/>
+Opening Hex: <br/><span id = "opening-hex"></span><br/></p>
+<p>Closing TxId: <br/><span id = "closing-tx-id"></span><br/>
+Closing Hex: <br/><span id = "closing-hex"></span><br/></p>
+<p>Dispute CET TxId: <br/><span id = "dispute-tx-id"></span><br/>
+Dispute CET Hex: <br/><span id = "dispute-hex"></span><br/></p>
+<p>Dispute Redemption TxId: <br/><span id = "dispute-red-tx-id"></span><br/>
+Dispute Redemption Hex: <br/><span id = "dispute-red-hex"></span><br/></p>
 </div>
       </article>
 

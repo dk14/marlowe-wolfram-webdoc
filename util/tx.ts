@@ -12,7 +12,7 @@ const net = bitcoin.networks.testnet
 export interface UTxO {
     txid: string,
     vout: number,
-    secrets: Buffer[]
+    secrets: string[]
 }
 
 export interface Tx {
@@ -46,7 +46,7 @@ function schnorrSignerSingle(pk, secret: Buffer): Signer {
             return null
         },
         signSchnorr(hash: Buffer): Buffer {
-            return schnorr.sign(hash, secret)
+            return schnorr.sign(convert.bufferToInt(secret), hash)
         },
         getPublicKey(): Buffer {
             return Buffer.from(pk, "hex")
@@ -66,8 +66,8 @@ function schnorrSignerMulti(pk1, pk2, secret1: Buffer, secret2: Buffer): Signer 
         },
         signSchnorr(hash: Buffer): Buffer {
             let muSignature = multisig.sign(pk1, pk2, 
-                secret1.toString("hex"),
-                secret2.toString("hex"),
+                convert.bufferToInt(secret1.toString("hex")),
+                convert.bufferToInt(secret2.toString("hex")),
                 hash.toString("hex"))
             return muSignature
         },
@@ -101,13 +101,13 @@ export const txApi: (schnorrApi: SchnorrApi) => TxApi = (schnorrApi) => {
             });
 
             psbt.addOutput({
-                address: p2pktr(pubKeyCombined).address!, // TODO: generate mu address
+                address: p2pktr(pubKeyCombined).address!,
                 value: aliceAmount + bobAmount
             });
 
 
-            psbt.signInput(0, schnorrSignerSingle(alicePk, aliceIn.secrets[0]))
-            psbt.signInput(1, schnorrSignerSingle(bobPk, bobIn.secrets[0]))
+            psbt.signInput(0, schnorrSignerSingle(alicePk, Buffer.from(aliceIn.secrets[0], "hex")))
+            psbt.signInput(1, schnorrSignerSingle(bobPk, Buffer.from(bobIn.secrets[0], "hex")))
             psbt.finalizeAllInputs()
             
             return {
@@ -139,7 +139,8 @@ export const txApi: (schnorrApi: SchnorrApi) => TxApi = (schnorrApi) => {
                 value: bobAmount
             });
 
-            psbt.signInput(0, schnorrSignerMulti(alicePk, bobPk, multiIn.secrets[0], multiIn.secrets[1]))
+            psbt.signInput(0, schnorrSignerMulti(alicePk, bobPk, 
+                Buffer.from(multiIn.secrets[0], "hex"), Buffer.from(multiIn.secrets[1], "hex")))
             psbt.finalizeAllInputs()
             
             return {
@@ -174,7 +175,9 @@ export const txApi: (schnorrApi: SchnorrApi) => TxApi = (schnorrApi) => {
                 value: bobAmount
             });
 
-            psbt.signInput(0, schnorrSignerMulti(alicePk, bobPk, multiIn.secrets[0], multiIn.secrets[1]))
+            psbt.signInput(0, schnorrSignerMulti(alicePk, bobPk, 
+                Buffer.from(multiIn.secrets[0], "hex"), 
+                Buffer.from(multiIn.secrets[1], "hex")))
             psbt.finalizeAllInputs()
             
             return {
@@ -201,7 +204,9 @@ export const txApi: (schnorrApi: SchnorrApi) => TxApi = (schnorrApi) => {
                 value: amount
             });
 
-            psbt.signInput(0, schnorrSignerMulti(alicePk, adaptorPk, aliceOracleIn.secrets[0], Buffer.from(oracleS, "hex")))
+            psbt.signInput(0, schnorrSignerMulti(alicePk, adaptorPk, 
+                Buffer.from(aliceOracleIn.secrets[0], "hex"),
+                Buffer.from(oracleS, "hex")))
 
             return {
                 txid: psbt.extractTransaction().getId(),
