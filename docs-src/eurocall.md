@@ -26,8 +26,9 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
             window.activeTicker = window.tick
             if (!window.flag) {
                 window.flag = true
-                document.querySelector('#minValue').value = window.tick - 400
-                document.querySelector('#maxValue').value = window.tick + 400
+                document.querySelector('#strike').value = window.tick
+                document.querySelector('#minValue').value = parseInt(document.querySelector('#strike').value) - 200
+                document.querySelector('#maxValue').value = parseInt(document.querySelector('#strike').value) + (parseInt(document.querySelector('#premium').value) + parseInt(document.querySelector('#margin').value)) * parseInt(document.querySelector('#notional').value) + 200
             }
             
         }
@@ -62,11 +63,9 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
         if (input != null) {
             window.tick = input
             window.activeTicker = window.tick
-            if (!window.flag) {
-                window.flag = true
-                document.querySelector('#minValue').value = window.tick - 400
-                document.querySelector('#maxValue').value = window.tick + 400
-            }
+            document.querySelector('#strike').value = window.tick
+            document.querySelector('#minValue').value = parseInt(document.querySelector('#strike').value) - 200
+            document.querySelector('#maxValue').value = parseInt(document.querySelector('#strike').value) + (parseInt(document.querySelector('#premium').value) + parseInt(document.querySelector('#margin').value)) * parseInt(document.querySelector('#notional').value) + 200
         }
     });
     document.querySelector('#wf-app-id').addEventListener('input', function() {
