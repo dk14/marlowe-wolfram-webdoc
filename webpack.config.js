@@ -28,5 +28,10 @@ module.exports = {
     }, 
     plugins: [
       new NodePolyfillPlugin()
-    ]
+    ],
+    experiments: {
+      asyncWebAssembly: true,
+      syncWebAssembly: true,
+      topLevelAwait: true,
+    }
   };

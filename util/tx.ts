@@ -1,6 +1,8 @@
 import * as bitcoin from "bitcoinjs-lib"
 import * as ecc from 'tiny-secp256k1';
-bitcoin.initEccLib(ecc);
+
+(ecc as any).then(ec => bitcoin.initEccLib(ec))
+
 
 import {Signer} from "bitcoinjs-lib/src/psbt.d"
 
@@ -74,7 +76,7 @@ function schnorrSignerMulti(pk1, pk2, secret1: Buffer, secret2: Buffer): Signer 
     }
 }
 
-export const schnorrApi: () => TxApi = () => {
+export const txApi: () => TxApi = () => {
     return {
         genOpeningTx: (aliceIn: UTxO, bobIn: UTxO, alicePk: string, bobPk: string, aliceAmount: number, bobAmount: number): Tx => {
             const psbt = new bitcoin.Psbt({ network: net})

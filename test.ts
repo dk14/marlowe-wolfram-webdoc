@@ -107,6 +107,7 @@ console.log('Hello')
 
 import * as bitcoin from "bitcoinjs-lib"
 import * as ecc from 'tiny-secp256k1';
+
 bitcoin.initEccLib(ecc);
 
 const net = bitcoin.networks.testnet
