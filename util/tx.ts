@@ -11,7 +11,6 @@ export interface UTxO {
     txid: string,
     vout: number,
     secrets: Buffer[]
-    
 }
 
 export interface Tx {

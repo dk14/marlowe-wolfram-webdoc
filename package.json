@@ -7,6 +7,7 @@
     "docs-build": "markdown-docs build docs-src docs",
     "docs-dev": "markdown-docs dev docs-src",
     "dev-watch": "webpack watch",
+    "webpack": "webpack build",
     "test": "npx ts-node test.ts"
   },
   "author": "",
