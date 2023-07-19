@@ -58,6 +58,19 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
         }
         try {
             document.querySelector("#oracle-public-key").textContent = window.api.schnorrApi().getPk(document.querySelector("#oracle-secret").value)
+            let question =  window.api.schnorrApi().hashString(document.querySelector("#oracle-answer").textContent)//"1111111".padStart(64, "0")
+            document.querySelector("#oracle-k-value").textContent = window.api.schnorrApi().genNonce(document.querySelector("#oracle-secret").value, question, "C87AA53824B4D7AE2EB035A2B5BBBCCC080E76CDC6D1692C4B0B62D798E6D906")
+            document.querySelector("#oracle-r-value").textContent = window.api.schnorrApi().getPk(document.querySelector("#oracle-k-value").textContent)
+            
+
+            let answer = window.activeTicker.toString(16).padStart(64, "0")
+
+            document.querySelector("#oracle-answer").textContent = window.activeTicker
+
+            document.querySelector("#twisted-pk").textContent = window.api.schnorrApi().adaptorPublic(document.querySelector("#oracle-public-key").textContent, answer, document.querySelector("#oracle-r-value").textContent)
+
+            document.querySelector("#oracle-s-value").textContent = window.api.schnorrApi().signatureSValue(document.querySelector("#oracle-secret").value, document.querySelector("#oracle-k-value").textContent, answer)
+            
         } catch {}
         
 
@@ -141,8 +154,26 @@ Let's sample Marlowe contract and plot the payoff curve
 
 # Prepare Oracle R and s values
 
-Oracle quesion: "What is the price of BTC"
+Oracle quesion: "" <input id = "oracle-question" value="What is the price of BTC in USD" size = 80></input>
 <br/>
 Oracle secret (hex): <br/><input id = "oracle-secret" value="B7E151628AED2A6ABF7158809CF4F3C762E7160F38B4DA56A784D9045190CFEF" size = 80></input>
 
-Oracle's public key: <br/><span id = "oracle-public-key"></span>
+Oracle's public key: <br/><span id = "oracle-public-key"></span><br/>
+
+Oracle's secret k-value: <br/><span id = "oracle-k-value"></span><br/>
+*(Security note: k-value is derived from encrypted question)*
+<br/>
+
+Oracle's public commited R-value: <br/><span id = "oracle-r-value"></span><br/>
+*(this value is returned by the oracle API when someone is asking for a question that is not answered yet)*
+<br/>
+
+Oracle's future answer: <br/><span id = "oracle-answer"></span><br/>
+
+Twisted public key (adaptor point), contract parties derive it from R, possible answer and oracle's public key <br/><span id = "twisted-pk"></span><br/>
+
+When the answer is ready...<br/> Oracle publishes s-value (signature): <br/><span id = "oracle-s-value"></span><br/>
+*(Note: signature is derived from pre-commited k-value, thus R-value part would be commited R-value as well)*
+<br/>
+
+This value is gonna be used as a secret (private key corresponding to adaptor public key) to co-sign CET transactions in case of dispute.

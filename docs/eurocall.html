@@ -115,6 +115,19 @@ Cors proxy prefix: <input id = "cors-proxy-prefix" value="https://corsproxy.io/?
         }
         try {
             document.querySelector("#oracle-public-key").textContent = window.api.schnorrApi().getPk(document.querySelector("#oracle-secret").value)
+            let question =  window.api.schnorrApi().hashString(document.querySelector("#oracle-answer").textContent)//"1111111".padStart(64, "0")
+            document.querySelector("#oracle-k-value").textContent = window.api.schnorrApi().genNonce(document.querySelector("#oracle-secret").value, question, "C87AA53824B4D7AE2EB035A2B5BBBCCC080E76CDC6D1692C4B0B62D798E6D906")
+            document.querySelector("#oracle-r-value").textContent = window.api.schnorrApi().getPk(document.querySelector("#oracle-k-value").textContent)
+
+
+            let answer = window.activeTicker.toString(16).padStart(64, "0")
+
+            document.querySelector("#oracle-answer").textContent = window.activeTicker
+
+            document.querySelector("#twisted-pk").textContent = window.api.schnorrApi().adaptorPublic(document.querySelector("#oracle-public-key").textContent, answer, document.querySelector("#oracle-r-value").textContent)
+
+            document.querySelector("#oracle-s-value").textContent = window.api.schnorrApi().signatureSValue(document.querySelector("#oracle-secret").value, document.querySelector("#oracle-k-value").textContent, answer)
+
         } catch {}
 
 
@@ -192,10 +205,22 @@ frameborder="no">
 <div id = "wolf-plot"></div>
 
 <h1 id="prepare-oracle-r-and-s-values">Prepare Oracle R and s values</h1>
-<p>Oracle quesion: &quot;What is the price of BTC&quot;
+<p>Oracle quesion: &quot;&quot; <input id = "oracle-question" value="What is the price of BTC in USD" size = 80></input>
 <br/>
 Oracle secret (hex): <br/><input id = "oracle-secret" value="B7E151628AED2A6ABF7158809CF4F3C762E7160F38B4DA56A784D9045190CFEF" size = 80></input></p>
-<p>Oracle&#39;s public key: <br/><span id = "oracle-public-key"></span></p>
+<p>Oracle&#39;s public key: <br/><span id = "oracle-public-key"></span><br/></p>
+<p>Oracle&#39;s secret k-value: <br/><span id = "oracle-k-value"></span><br/>
+<em>(Security note: k-value is derived from encrypted question)</em>
+<br/></p>
+<p>Oracle&#39;s public commited R-value: <br/><span id = "oracle-r-value"></span><br/>
+<em>(this value is returned by the oracle API when someone is asking for a question that is not answered yet)</em>
+<br/></p>
+<p>Oracle&#39;s future answer: <br/><span id = "oracle-answer"></span><br/></p>
+<p>Twisted public key (adaptor point), contract parties derive it from R, possible answer and oracle&#39;s public key <br/><span id = "twisted-pk"></span><br/></p>
+<p>When the answer is ready...<br/> Oracle publishes s-value (signature): <br/><span id = "oracle-s-value"></span><br/>
+<em>(Note: signature is derived from pre-commited k-value, thus R-value part would be commited R-value as well)</em>
+<br/></p>
+<p>This value is gonna be used as a secret (private key corresponding to adaptor public key) to co-sign CET transactions in case of dispute.</p>
 </div>
       </article>
 

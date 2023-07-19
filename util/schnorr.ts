@@ -14,6 +14,7 @@ export interface SchnorrApi {
     getPk: (privHex: string) => string
     genNonce: (oraclePrivHex: string, questionHex: string, auxHex: string) => string
     signatureSValue: (privHex: string, nonce: string, msgHex: string) => string
+    hashString: (str: string) => string
 
     adaptorPublic: (oraclePbHex: string, msgHex: string, rHex: string) => string
 }
@@ -27,6 +28,9 @@ export const schnorrApi: () => SchnorrApi = () => {
             const pubInt = convert.bufferToInt(adaptor.createAdaptorPoint([Buffer.from(oraclePbHex, 'hex')], [Buffer.from(msgHex, 'hex')], [Buffer.from(rHex, 'hex')]))
     
             return pubInt.toString(16)
+        },
+        hashString: (str: string): string => {
+            return convert.bufferToInt(math.taggedHash('BIP0340/nonce', str)).mod(n).toString(16)
         },
         genNonce: (oraclePrivHex: string, questionHex: string, auxHex: string): string => {
             const aux = Buffer.from(auxHex, 'hex');
