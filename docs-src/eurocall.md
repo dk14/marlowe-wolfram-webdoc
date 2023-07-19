@@ -56,6 +56,11 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
         if (document.querySelector("#img-loading-placeholder") != null && document.querySelector("#img-loading-placeholder") != undefined) {
             document.querySelector("#img-loading-placeholder").textContent = `Generating Wolfram Plot${".".repeat(window.i % 5)}`
         }
+        try {
+            document.querySelector("#oracle-public-key").textContent = window.api.schnorrApi().getPk(document.querySelector("#oracle-secret").value)
+        } catch {}
+        
+
     })
 
     document.querySelector('#ticker').addEventListener('input', function() {
@@ -133,3 +138,11 @@ Let's sample Marlowe contract and plot the payoff curve
 <button type="button" id="download-nb-btn" style="height: 30px;" hidden onclick="window.api.downloadWolfNb(); ">Download as Wolfram Notebook</button>
 <br/>
 <div id = "wolf-plot"></div>
+
+# Prepare Oracle R and s values
+
+Oracle quesion: "What is the price of BTC"
+<br/>
+Oracle secret (hex): <br/><input id = "oracle-secret" value="B7E151628AED2A6ABF7158809CF4F3C762E7160F38B4DA56A784D9045190CFEF" size = 80></input>
+
+Oracle's public key: <br/><span id = "oracle-public-key"></span>
