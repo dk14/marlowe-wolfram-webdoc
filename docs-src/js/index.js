@@ -32,6 +32,7 @@ window.marloweWindow = async () => {
 const attachDarkReader = () => {
     window.marloweWindow().then(async inst => {
         console.log('helloooo!!!!!!!!!')
+        inst.isMarlowe = true
         var script = await (await fetch(window.location.origin + '/marlowe-wolfram-webdoc/js/bundle.js')).text()
         inst.eval(script)
         console.log('helloooo!!!!!!!!!!!!!!')

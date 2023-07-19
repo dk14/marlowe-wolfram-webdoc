@@ -48,6 +48,7 @@ declare global {
         activeTicker: number
         wfAppId: string
         corsProxyPrefix: string
+        isMarlowe: boolean
     }
 }
 
@@ -55,7 +56,8 @@ declare global {
 
 darkify(window.document)
 
-if (window.marloweWindow != undefined) {
+if (window.marloweWindow != undefined && !window.isMarlowe) {
+    console.log('init api...')
     window.marloweWindow().then(mw => {
         
                 
