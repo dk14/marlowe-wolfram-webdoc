@@ -68,7 +68,7 @@ if (window.marloweWindow != undefined && !window.isMarlowe) {
                 samplingInProgress: false
             },
             schnorrApi: schnorrApi,
-            txApi: txApi,
+            txApi: () => txApi(schnorrApi()),
             injectMarloweContract: async (c: MarloweContract, updateState = true) => {
                 if (updateState) {
                     window.api.state.contract = c

@@ -118,6 +118,8 @@ const p2pktr = bitcoin.payments.p2tr({
     network: net
   })
 
+console.log(p2pktr.address)
+
 const txid = "0c387ef5a1c7b197f357dfd7679a5fb0bb784752c710c06654b80b94155b2777"
 const vout = 0
 
