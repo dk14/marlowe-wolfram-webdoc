@@ -82,7 +82,7 @@ export const txApi: (schnorrApi: SchnorrApi) => TxApi = (schnorrApi) => {
         genOpeningTx: (aliceIn: UTxO, bobIn: UTxO, alicePk: string, bobPk: string, aliceAmount: number, bobAmount: number): Tx => {
             const psbt = new bitcoin.Psbt({ network: net})
             let aliceP2TR = p2pktr(alicePk)
-            let bobP2TR = p2pktr(alicePk)
+            let bobP2TR = p2pktr(bobPk)
             const pkCombined = muSig.pubKeyCombine([Buffer.from(alicePk, "hex"), Buffer.from(bobPk, "hex")]);
             let pubKeyCombined = convert.intToBuffer(pkCombined.affineX);
 

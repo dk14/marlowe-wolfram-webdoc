@@ -22,6 +22,7 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
 
     let btcUpdater = () => {
         try {
+            console.log("recompute transactions start...")
             document.querySelector("#oracle-public-key").textContent = window.api.schnorrApi().getPk(document.querySelector("#oracle-secret").value)
             let question =  window.api.schnorrApi().hashString(document.querySelector("#oracle-question").value)//"1111111".padStart(64, "0")
             //console.log("question = " + document.querySelector("#oracle-question").value)
@@ -95,7 +96,10 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
 
             document.querySelector("#dispute-red-tx-id").textContent = redemptionTx.txid
             document.querySelector("#dispute-red-hex").textContent = redemptionTx.hex
-        } catch {}
+            console.log("...recompute transactions end")
+        } catch (err) {
+            console.log(err.stack)
+        }
     }
     btcUpdater()
 
@@ -254,7 +258,7 @@ Alice:
 * vout: <input type="number" id="alice-vout" name="quantity" min="0" max="100" value="0"></input>
 
 Bob:
-* secret (hex): <br/><input id = "bob-secret" value="C90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B14E5C9" size = 80></input>
+* secret (hex): <br/><input id = "bob-secret" value="C90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B14E5C7" size = 80></input>
 * utxo value: <input type="number" id="bob-amount-in" name="quantity" min="1" max="100000" value="100"></input>
 * txid (hex): <br/><input id = "bob-tx-id" value="6220e8113cb985b6c9bef8acb43b7573ba7f6b3230f27339d3d357ead51f65cc" size = 80></input>
 * vout: <input type="number" id="bob-vout" name="quantity" min="0" max="100" value="1"></input>

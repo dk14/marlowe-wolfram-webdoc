@@ -79,6 +79,7 @@ Cors proxy prefix: <input id = "cors-proxy-prefix" value="https://corsproxy.io/?
 
     let btcUpdater = () => {
         try {
+            console.log("recompute transactions start...")
             document.querySelector("#oracle-public-key").textContent = window.api.schnorrApi().getPk(document.querySelector("#oracle-secret").value)
             let question =  window.api.schnorrApi().hashString(document.querySelector("#oracle-question").value)//"1111111".padStart(64, "0")
             //console.log("question = " + document.querySelector("#oracle-question").value)
@@ -152,7 +153,10 @@ Cors proxy prefix: <input id = "cors-proxy-prefix" value="https://corsproxy.io/?
 
             document.querySelector("#dispute-red-tx-id").textContent = redemptionTx.txid
             document.querySelector("#dispute-red-hex").textContent = redemptionTx.hex
-        } catch {}
+            console.log("...recompute transactions end")
+        } catch (err) {
+            console.log(err.stack)
+        }
     }
     btcUpdater()
 
@@ -298,7 +302,7 @@ Oracle secret (hex): <br/><input id = "oracle-secret" value="B7E151628AED2A6ABF7
 </ul>
 <p>Bob:</p>
 <ul>
-<li>secret (hex): <br/><input id = "bob-secret" value="C90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B14E5C9" size = 80></input></li>
+<li>secret (hex): <br/><input id = "bob-secret" value="C90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B14E5C7" size = 80></input></li>
 <li>utxo value: <input type="number" id="bob-amount-in" name="quantity" min="1" max="100000" value="100"></input></li>
 <li>txid (hex): <br/><input id = "bob-tx-id" value="6220e8113cb985b6c9bef8acb43b7573ba7f6b3230f27339d3d357ead51f65cc" size = 80></input></li>
 <li>vout: <input type="number" id="bob-vout" name="quantity" min="0" max="100" value="1"></input></li>
