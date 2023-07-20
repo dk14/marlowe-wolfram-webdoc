@@ -4,6 +4,7 @@
 Run locally:
 ```
 git clone https://github.com/dk14/marlowe-wolfram-webdoc/
+cd marlowe-wolfram-webdoc
 npm run docs-dev
 ```
 
