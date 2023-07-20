@@ -17,7 +17,7 @@ https://dk14.github.io/marlowe-wolfram-webdoc/eurocall
 If you see deceptive website warning: press details -> proceed. 
 Check security manually: https://sitecheck.sucuri.net/results/https/dk14.github.io/marlowe-wolfram-webdoc/eurocall
 
-Website is using snapshotted webarchived version of Marlowe Playground, so use it only for educational purposes, and rely on https://play.marlowe.iohk.io/#/ for actual contract development.
+Website is using snapshotted webarchived version of Marlowe Playground (thus deceptive website warning appears for some users), so use it only for educational purposes, and rely on https://play.marlowe.iohk.io/#/ for actual contract development.
 
 Website is using bitcoinjs-lib and experimental cryptography, so use cryptographic tooling for educational purposes only and rely on audited implementations of Schnorr adaptor points.
 
