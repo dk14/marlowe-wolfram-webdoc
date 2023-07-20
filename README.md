@@ -21,4 +21,4 @@ Website is using snapshotted webarchived version of Marlowe Playground, so use i
 
 Website is using bitcoinjs-lib and experimental cryptography, so use cryptographic tooling for educational purposes only and rely on audited implementations of Schnorr adaptor points.
 
-Note for Wolfram: CORS-proxy won't be needed if served from wolfram.com domain or any other in wolfram's Aloow-Origin policy. App-id likely won't be needed either.
+Note for Wolfram: CORS-proxy won't be needed if served from wolfram.com domain or any other in wolfram's Allow-Origin policy. App-id likely won't be needed either.
