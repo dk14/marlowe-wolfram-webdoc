@@ -17,8 +17,8 @@ https://dk14.github.io/marlowe-wolfram-webdoc/eurocall
 If you see deceptive website warning: press details -> proceed. 
 Check security manually: https://sitecheck.sucuri.net/results/https/dk14.github.io/marlowe-wolfram-webdoc/eurocall
 
-Website is using snapshotted webarchived version of Marlowe Playground (thus deceptive website warning appears for some users), so use it only for educational purposes, and rely on https://play.marlowe.iohk.io/#/ for actual contract development.
+Website is using snapshotted webarchived version of Marlowe Playground (thus deceptive website warning appears for some users), so use it ONLY FOR EDUCATIONAL purposes, and rely on https://play.marlowe.iohk.io/#/ for actual contract development.
 
-Website is using bitcoinjs-lib and experimental cryptography, so use cryptographic tooling for educational purposes only and rely on audited implementations of Schnorr adaptor points.
+Website is using bitcoinjs-lib and experimental cryptography, so use cryptographic tooling for EDUCATIONAL purposes only and rely on audited implementations of Schnorr adaptor points instead.
 
 Note for Wolfram: CORS-proxy won't be needed if served from wolfram.com domain or any other in wolfram's Allow-Origin policy. App-id likely won't be needed either.
