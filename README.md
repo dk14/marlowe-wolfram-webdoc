@@ -10,7 +10,7 @@ npm run docs-dev
 You can also trivially serve ./docs folder as a website, just make sure that your path is <domain>/marlowe-wolfram-webdoc/ and that wasm files mime type is "application/wasm"
 
 
-It is also served as webpage
+It is also served as Github Pages:
 https://dk14.github.io/marlowe-wolfram-webdoc/eurocall
 
 If you see deceptive website warning: press details -> proceed. 
