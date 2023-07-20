@@ -228,6 +228,8 @@ Let's sample Marlowe contract and plot the payoff curve
 
 # Prepare Oracle R and s values for Bitcoin DLC
 
+Warning: Don't use any of it with actual Bitcoin mainnet - educational purposes only <br/>
+
 Oracle quesion: <input id = "oracle-question" value="What is the price of BTC in USD" size = 80></input>
 <br/>
 Oracle secret (hex): <br/><input id = "oracle-secret" value="B7E151628AED2A6ABF7158809CF4F3C762E7160F38B4DA56A784D9045190CFEF" size = 80></input>
