@@ -6,9 +6,9 @@ layout: default
 
 
 # Wolfram Oracle
-Wolfram app-id: <input id = "wf-app-id" value="6WU6JX-46EP5U9AGX"></input>
+Wolfram app-id (use your own, https://products.wolframalpha.com/simple-api/documentation): <input id = "wf-app-id" value="6WU6JX-46EP5U9AGX"></input>
 <br/>
-Cors proxy prefix: <input id = "cors-proxy-prefix" value="https://corsproxy.io/?"></input>
+Cors proxy prefix (to query wolfram services): <input id = "cors-proxy-prefix" value="https://corsproxy.io/?"></input>
 
 BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" name="lock" >lock</input>)
 <br/>
