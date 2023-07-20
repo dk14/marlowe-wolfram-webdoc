@@ -20,3 +20,5 @@ Check security manually: https://sitecheck.sucuri.net/results/https/dk14.github.
 Website is using snapshotted webarchived version of Marlowe Playground, so use it only for educational purposes, and rely on https://play.marlowe.iohk.io/#/ for actual contract development.
 
 Website is using bitcoinjs-lib and experimental cryptography, so use cryptographic tooling for educational purposes only and rely on audited implementations of Schnorr adaptor points.
+
+Note for Wolfram: CORS-proxy won't be needed if served from wolfram.com domain or any other in wolfram's Aloow-Origin policy. App-id likely own't be needed either.
