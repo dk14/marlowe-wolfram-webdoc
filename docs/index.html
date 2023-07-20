@@ -60,12 +60,24 @@
         
         <div>
           <p><strong>Page Content</strong></p>
-          <div class="section-nav"><ul class="toc"><li><a href="#welcome">Welcome</a></li></ul></div>
+          <div class="section-nav"><ul class="toc"><li><a href="#welcome">Welcome</a></li><li><a href="#marlowe-wolfram-webdoc">marlowe-wolfram-webdoc</a></li></ul></div>
         </div>
         
 
         <div class="post-content"><h1 id="welcome">Welcome</h1>
 <p>Welcome to our interactive webdoc!</p>
+<h1 id="marlowe-wolfram-webdoc">marlowe-wolfram-webdoc</h1>
+<p>Run locally:</p>
+<pre><code>git clone https://github.com/dk14/marlowe-wolfram-webdoc/
+cd marlowe-wolfram-webdoc
+npm run docs-dev</code></pre><p>You can also trivially serve ./docs folder as a website, just make sure that your path is $domain/marlowe-wolfram-webdoc/ and that wasm files mime type is &quot;application/wasm&quot; (modern http servers treat it properly)</p>
+<p>It is also served as Github Pages:
+<a href="https://dk14.github.io/marlowe-wolfram-webdoc/eurocall">https://dk14.github.io/marlowe-wolfram-webdoc/eurocall</a></p>
+<p>If you see deceptive website warning: press details -&gt; proceed. 
+Check security manually: <a href="https://sitecheck.sucuri.net/results/https/dk14.github.io/marlowe-wolfram-webdoc/eurocall">https://sitecheck.sucuri.net/results/https/dk14.github.io/marlowe-wolfram-webdoc/eurocall</a></p>
+<p>Website is using snapshotted webarchived version of Marlowe Playground, so use it only for educational purposes, and rely on <a href="https://play.marlowe.iohk.io/#/">https://play.marlowe.iohk.io/#/</a> for actual contract development.</p>
+<p>Website is using bitcoinjs-lib and experimental cryptography, so use cryptographic tooling for educational purposes only and rely on audited implementations of Schnorr adaptor points.</p>
+<p>Note for Wolfram: CORS-proxy won&#39;t be needed if served from wolfram.com domain or any other in wolfram&#39;s Allow-Origin policy. App-id likely won&#39;t be needed either.</p>
 </div>
       </article>
 
