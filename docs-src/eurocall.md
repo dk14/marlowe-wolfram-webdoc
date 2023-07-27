@@ -273,7 +273,7 @@ This value is gonna be used as a secret (private key corresponding to adaptor pu
 
 # Prepare Transactions for Bitcoin DLC
 
-Orifinal DLC paper: https://adiabat.github.io/dlc.pdf <br/>
+Original DLC paper: https://adiabat.github.io/dlc.pdf <br/>
 DLC and Oracles: https://docs.google.com/document/d/1TVYvpZwwGLrSYHtnpoEoSE1csMSZfZ-A7xF9w0viMIs/edit?usp=sharing <br/>
 Decode TX hexes (choose Testnet): https://live.blockcypher.com/btc/decodetx/ <br/>
 
