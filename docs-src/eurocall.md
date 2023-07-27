@@ -165,7 +165,11 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
 
 # Marlowe Contract
 
-Let's generate marlowe European Call contract first. Alice and Bob are betting on BTC price. The risk is amortized for small price changes between Alice's premium at risk and Bob's margin at risk, leveraged by notional. The deal is P2P, thus fully collatrerized, no "pooled margin account" risks involved.
+Let's generate marlowe European Call contract first. Alice and Bob are betting on BTC price. The risk is amortized for small price changes between Alice's premium at risk and Bob's margin at risk, leveraged by notional. The deal is P2P, thus fully collatrerized, no "pooled margin account" risks involved.<br/>
+
+Cardano version: https://github.com/dk14/marlowe-wolfram-starter-kit/blob/main/22-eurocall.ipynb
+
+Contract terms:
 
 * Contract strike is <input type="number" id="strike" name="quantity" min="1" max="100000" value="30000"></input> usd
 * Alice pays premium of <input type="number" id="premium" name="quantity" min="1" max="100000" value="200"></input> usd
@@ -203,7 +207,7 @@ Generate Marlowe contract!
 <div id="progress-offset" style="display:none"></div>
 <progress id="sampling-progress" value="0" max="100" style="display:none"></progress>
 
-Note: this is webarchived slightly edited SNAPSHOT of open source Marlowe Playground, **NOT ACTUAL** PLAYGROUND BY IOHK (see https://replayweb.page/docs/wacz-format, actual Playground might differ: https://play.marlowe.iohk.io/, https://github.com/input-output-hk/marlowe-playground). Do NOT trust this for any other purposes than educational. Generator auto-fills the contract for you (since original playground doesn't support that), so you could simulate the contract. USE actual https://play.marlowe.iohk.io/ for contract development.
+*Note: this is webarchived slightly edited SNAPSHOT of open source Marlowe Playground, **NOT ACTUAL** PLAYGROUND BY IOHK (see https://replayweb.page/docs/wacz-format, actual Playground might differ: https://play.marlowe.iohk.io/, https://github.com/input-output-hk/marlowe-playground). Do NOT trust this for any other purposes than educational. Generator auto-fills the contract for you (since original playground doesn't support that), so you could simulate the contract. USE actual https://play.marlowe.iohk.io/ for contract development.*
 
 <iframe src="./marlowe.html" 
 title="Marlowe" height="800" width = "100%" id = "marlowe-frame" 
@@ -215,7 +219,8 @@ frameborder="no">
 
 # Sampling
 
-Let's sample Marlowe contract and plot the payoff curve
+Let's sample Marlowe contract and plot the payoff curve. 
+*Note: contract has to be generated first*
 
 <button type="button" id="sample-btn" style="height: 30px;" disabled onclick="window.api.sampleMarloweContract().then(() => window.api.embedWolfPlot(document.getElementById('wolf-plot')))">Sample Marlowe contract!</button>
 <br/>
@@ -227,6 +232,8 @@ Let's sample Marlowe contract and plot the payoff curve
 <div id = "wolf-plot"></div>
 
 # Prepare Oracle R and s values for Bitcoin DLC
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 Warning: Don't use any of it with actual Bitcoin mainnet - educational purposes only <br/>
 
@@ -234,19 +241,29 @@ Oracle quesion: <input id = "oracle-question" value="What is the price of BTC in
 <br/>
 Oracle secret (hex): <br/><input id = "oracle-secret" value="B7E151628AED2A6ABF7158809CF4F3C762E7160F38B4DA56A784D9045190CFEF" size = 80></input>
 
-Oracle's public key: <br/><span id = "oracle-public-key"></span><br/>
+Oracle's public key: <br/>
+\\(V = secret \circ G\\)<br/>
+<span id = "oracle-public-key"></span><br/>
 
-Oracle's secret k-value: <br/><span id = "oracle-k-value"></span><br/>
-*(Security note: k-value is derived from encrypted question)*
+Oracle's secret k-value: 
+<br/>
+\\( k= hash(secret_{oracle} G || hash(aux) || question) \mod n \\)
+<br/><span id = "oracle-k-value"></span><br/>
+*(Security note: k-value is derived from hash-encrypted question)*
 <br/>
 
-Oracle's public commited R-value: <br/><span id = "oracle-r-value"></span><br/>
+Oracle's public commited R-value: <br/>
+\\( R=kG \\)
+<br/>
+<span id = "oracle-r-value"></span><br/>
 *(this value is returned by the oracle API when someone is asking for a question that is not answered yet)*
 <br/>
 
 Oracle's future answer: <br/><span id = "oracle-answer"></span><br/>
 
-Twisted public key (adaptor point), contract parties derive it from R, possible answer and oracle's public key <br/><span id = "twisted-pk"></span><br/>
+Twisted public key (adaptor point), contract parties derive it from R, possible answer and oracle's public key 
+<br/>\\( Pub_{Alice, question} = Pub_{Alice} + s_{answer}G\\), <br/> where \\(s_{answer}G = R − hash(answer || R)V\\)
+<br/><span id = "twisted-pk"></span><br/>
 
 When the answer is ready...<br/> Oracle publishes s-value (signature): <br/><span id = "oracle-s-value"></span><br/>
 *(Note: signature is derived from pre-commited k-value, thus R-value part would be commited R-value as well)*
@@ -256,6 +273,8 @@ This value is gonna be used as a secret (private key corresponding to adaptor pu
 
 # Prepare Transactions for Bitcoin DLC
 
+https://adiabat.github.io/dlc.pdf <br/>
+https://docs.google.com/document/d/1TVYvpZwwGLrSYHtnpoEoSE1csMSZfZ-A7xF9w0viMIs/edit?usp=sharing <br/>
 
 Alice: 
 * secret (hex): <br/><input id = "alice-secret" value="C90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B14E5C9" size = 80></input>
@@ -268,18 +287,35 @@ Bob:
 * utxo value: <input type="number" id="bob-amount-in" name="quantity" min="1" max="100000" value="100"></input>
 * txid (hex): <br/><input id = "bob-tx-id" value="6220e8113cb985b6c9bef8acb43b7573ba7f6b3230f27339d3d357ead51f65cc" size = 80></input>
 * vout: <input type="number" id="bob-vout" name="quantity" min="0" max="100" value="1"></input>
+----
+\\(OpeningTx: txin_{AliceCollateral}(Pub_{Alice}) + txin_{BobCollateral}(Pub_{Bob}) = txout_{JointCollateral}(Pub_{Alice} + Pub_{Bob})\\) <br/><br/>
+**Opening TxId:** <br/><span id = "opening-tx-id"></span><br/>
+**Opening Hex:** <br/><span id = "opening-hex"></span><br/>
 
-Opening TxId: <br/><span id = "opening-tx-id"></span><br/>
-Opening Hex: <br/><span id = "opening-hex"></span><br/>
+----
+\\(ClosingTx: txin_{JointCollateral}(Pub_{Alice} + Pub_{Bob}) = txout_{AlicePayoff}(Pub_{Alice}) + txout_{BobPayoff}(Pub_{Bob})\\) <br/><br/>
+**Closing TxId:** <br/><span id = "closing-tx-id"></span><br/>
+**Closing Hex:** <br/><span id = "closing-hex"></span><br/>
 
-Closing TxId: <br/><span id = "closing-tx-id"></span><br/>
-Closing Hex: <br/><span id = "closing-hex"></span><br/>
+----
+\\(DisputeTx: txin_{JointCollateral}(Pub_{Alice} + Pub_{Bob}) = txout_{AlicePayoff}(Pub_{Alice} + s_{answer}G) + txout_{BobPayoff}(Pub_{Bob})\\) <br/>
+\\(s_{answer}G\\) is known in advance, while \\(s_{answer}\\) will be published by Oracle <br/><br/>
 
-Dispute CET TxId: <br/><span id = "dispute-tx-id"></span><br/>
-Dispute CET Hex: <br/><span id = "dispute-hex"></span><br/>
+**Dispute CET TxId:** <br/><span id = "dispute-tx-id"></span><br/>
+**Dispute CET Hex:** <br/><span id = "dispute-hex"></span><br/>
 
-Dispute Redemption TxId: <br/><span id = "dispute-red-tx-id"></span><br/>
-Dispute Redemption Hex: <br/><span id = "dispute-red-hex"></span><br/>
+----
+\\(RedemptionTx: txin_{AlicePayoff}(Pub_{Alice} + s_{answer}G) = txout_{AlicePayoff}(Pub_{Alice}) \\) <br/>
+\\(signature = (s_{Alice} + s_{answer}) || (R_{Alice} + R_{question})\\)
+<br/><br/>
+
+**Dispute Redemption TxId:** <br/><span id = "dispute-red-tx-id"></span><br/>
+**Dispute Redemption Hex:** <br/><span id = "dispute-red-hex"></span><br/>
+
+----
+<br/>
+
+![image](diagram.png)
 
 <script>
     document.querySelector('#oracle-question').addEventListener('input', btcUpdater)
