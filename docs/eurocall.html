@@ -290,24 +290,24 @@ frameborder="no">
 Oracle secret (hex): <br/><input id = "oracle-secret" value="B7E151628AED2A6ABF7158809CF4F3C762E7160F38B4DA56A784D9045190CFEF" size = 80></input></p>
 <p>Oracle&#39;s public key: <br/>
 \(V = secret \circ G\)<br/>
-<span id = "oracle-public-key"></span><br/></p>
+<span id = "oracle-public-key" color="green"></span><br/></p>
 <p>Oracle&#39;s secret k-value: 
 <br/>
 \( k= hash(secret_{oracle} G || hash(aux) || question) \mod n \)
-<br/><span id = "oracle-k-value"></span><br/>
+<br/><span id = "oracle-k-value" color="green"></span><br/>
 <em>(Security note: k-value is derived from hash-encrypted question)</em>
 <br/></p>
 <p>Oracle&#39;s public commited R-value: <br/>
 \( R=kG \)
 <br/>
-<span id = "oracle-r-value"></span><br/>
+<span id = "oracle-r-value" color="green"></span><br/>
 <em>(this value is returned by the oracle API when someone is asking for a question that is not answered yet)</em>
 <br/></p>
-<p>Oracle&#39;s future answer: <br/><span id = "oracle-answer"></span><br/></p>
-<p>Twisted public key (adaptor point), contract parties derive it from R, possible answer and oracle&#39;s public key 
+<p>Oracle&#39;s future answer: <br/><span id = "oracle-answer" color="green"></span><br/></p>
+<p>Tweaked public key (adaptor point), contract parties derive it from R, possible answer and oracle&#39;s public key 
 <br/>\( Pub_{Alice, question} = Pub_{Alice} + s_{answer}G\), <br/> where \(s_{answer}G = R − hash(answer || R)V\)
-<br/><span id = "twisted-pk"></span><br/></p>
-<p>When the answer is ready...<br/> Oracle publishes s-value (signature): <br/><span id = "oracle-s-value"></span><br/>
+<br/><span id = "twisted-pk" color="green"></span><br/></p>
+<p>When the answer is ready...<br/> Oracle publishes s-value (signature): <br/><span id = "oracle-s-value" color="green"></span><br/>
 <em>(Note: signature is derived from pre-commited k-value, thus R-value part would be commited R-value as well)</em>
 <br/></p>
 <p>This value is gonna be used as a secret (private key corresponding to adaptor public key) to co-sign CET transactions in case of dispute.</p>
@@ -331,23 +331,23 @@ Decode TX hexes (choose Testnet): <a href="https://live.blockcypher.com/btc/deco
 </ul>
 <hr>
 <p>\(OpeningTx: txin_{AliceCollateral}(Pub_{Alice}) + txin_{BobCollateral}(Pub_{Bob}) = txout_{JointCollateral}(Pub_{Alice} + Pub_{Bob})\) <br/><br/>
-<strong>Opening TxId:</strong> <br/><span id = "opening-tx-id"></span><br/>
-<strong>Opening Hex:</strong> <br/><span id = "opening-hex"></span><br/></p>
+<strong>Opening TxId:</strong> <br/><span id = "opening-tx-id" color="green"></span><br/>
+<strong>Opening Hex:</strong> <br/><span id = "opening-hex" color="green"></span><br/></p>
 <hr>
 <p>\(ClosingTx: txin_{JointCollateral}(Pub_{Alice} + Pub_{Bob}) = txout_{AlicePayoff}(Pub_{Alice}) + txout_{BobPayoff}(Pub_{Bob})\) <br/><br/>
-<strong>Closing TxId:</strong> <br/><span id = "closing-tx-id"></span><br/>
-<strong>Closing Hex:</strong> <br/><span id = "closing-hex"></span><br/></p>
+<strong>Closing TxId:</strong> <br/><span id = "closing-tx-id" color="green"></span><br/>
+<strong>Closing Hex:</strong> <br/><span id = "closing-hex" color="green"></span><br/></p>
 <hr>
 <p>\(DisputeTx: txin_{JointCollateral}(Pub_{Alice} + Pub_{Bob}) = txout_{AlicePayoff}(Pub_{Alice} + s_{answer}G) + txout_{BobPayoff}(Pub_{Bob})\) <br/>
 \(s_{answer}G\) is known in advance, while \(s_{answer}\) will be published by Oracle <br/><br/></p>
-<p><strong>Dispute CET TxId:</strong> <br/><span id = "dispute-tx-id"></span><br/>
-<strong>Dispute CET Hex:</strong> <br/><span id = "dispute-hex"></span><br/></p>
+<p><strong>Dispute CET TxId:</strong> <br/><span id = "dispute-tx-id" color="green"></span><br/>
+<strong>Dispute CET Hex:</strong> <br/><span id = "dispute-hex" color="green"></span><br/></p>
 <hr>
 <p>\(RedemptionTx: txin_{AlicePayoff}(Pub_{Alice} + s_{answer}G) = txout_{AlicePayoff}(Pub_{Alice}) \) <br/>
 \(signature = (s_{Alice} + s_{answer}) || (R_{Alice} + R_{question})\)
 <br/><br/></p>
-<p><strong>Dispute Redemption TxId:</strong> <br/><span id = "dispute-red-tx-id"></span><br/>
-<strong>Dispute Redemption Hex:</strong> <br/><span id = "dispute-red-hex"></span><br/></p>
+<p><strong>Dispute Redemption TxId:</strong> <br/><span id = "dispute-red-tx-id" color="green"></span><br/>
+<strong>Dispute Redemption Hex:</strong> <br/><span id = "dispute-red-hex" color="green"></span><br/></p>
 <hr>
 <br/>
 

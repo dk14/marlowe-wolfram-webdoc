@@ -243,29 +243,29 @@ Oracle secret (hex): <br/><input id = "oracle-secret" value="B7E151628AED2A6ABF7
 
 Oracle's public key: <br/>
 \\(V = secret \circ G\\)<br/>
-<span id = "oracle-public-key"></span><br/>
+<span id = "oracle-public-key" color="green"></span><br/>
 
 Oracle's secret k-value: 
 <br/>
 \\( k= hash(secret_{oracle} G || hash(aux) || question) \mod n \\)
-<br/><span id = "oracle-k-value"></span><br/>
+<br/><span id = "oracle-k-value" color="green"></span><br/>
 *(Security note: k-value is derived from hash-encrypted question)*
 <br/>
 
 Oracle's public commited R-value: <br/>
 \\( R=kG \\)
 <br/>
-<span id = "oracle-r-value"></span><br/>
+<span id = "oracle-r-value" color="green"></span><br/>
 *(this value is returned by the oracle API when someone is asking for a question that is not answered yet)*
 <br/>
 
-Oracle's future answer: <br/><span id = "oracle-answer"></span><br/>
+Oracle's future answer: <br/><span id = "oracle-answer" color="green"></span><br/>
 
-Twisted public key (adaptor point), contract parties derive it from R, possible answer and oracle's public key 
+Tweaked public key (adaptor point), contract parties derive it from R, possible answer and oracle's public key 
 <br/>\\( Pub_{Alice, question} = Pub_{Alice} + s_{answer}G\\), <br/> where \\(s_{answer}G = R − hash(answer || R)V\\)
-<br/><span id = "twisted-pk"></span><br/>
+<br/><span id = "twisted-pk" color="green"></span><br/>
 
-When the answer is ready...<br/> Oracle publishes s-value (signature): <br/><span id = "oracle-s-value"></span><br/>
+When the answer is ready...<br/> Oracle publishes s-value (signature): <br/><span id = "oracle-s-value" color="green"></span><br/>
 *(Note: signature is derived from pre-commited k-value, thus R-value part would be commited R-value as well)*
 <br/>
 
@@ -290,28 +290,28 @@ Bob:
 * vout: <input type="number" id="bob-vout" name="quantity" min="0" max="100" value="1"></input>
 ----
 \\(OpeningTx: txin_{AliceCollateral}(Pub_{Alice}) + txin_{BobCollateral}(Pub_{Bob}) = txout_{JointCollateral}(Pub_{Alice} + Pub_{Bob})\\) <br/><br/>
-**Opening TxId:** <br/><span id = "opening-tx-id"></span><br/>
-**Opening Hex:** <br/><span id = "opening-hex"></span><br/>
+**Opening TxId:** <br/><span id = "opening-tx-id" color="green"></span><br/>
+**Opening Hex:** <br/><span id = "opening-hex" color="green"></span><br/>
 
 ----
 \\(ClosingTx: txin_{JointCollateral}(Pub_{Alice} + Pub_{Bob}) = txout_{AlicePayoff}(Pub_{Alice}) + txout_{BobPayoff}(Pub_{Bob})\\) <br/><br/>
-**Closing TxId:** <br/><span id = "closing-tx-id"></span><br/>
-**Closing Hex:** <br/><span id = "closing-hex"></span><br/>
+**Closing TxId:** <br/><span id = "closing-tx-id" color="green"></span><br/>
+**Closing Hex:** <br/><span id = "closing-hex" color="green"></span><br/>
 
 ----
 \\(DisputeTx: txin_{JointCollateral}(Pub_{Alice} + Pub_{Bob}) = txout_{AlicePayoff}(Pub_{Alice} + s_{answer}G) + txout_{BobPayoff}(Pub_{Bob})\\) <br/>
 \\(s_{answer}G\\) is known in advance, while \\(s_{answer}\\) will be published by Oracle <br/><br/>
 
-**Dispute CET TxId:** <br/><span id = "dispute-tx-id"></span><br/>
-**Dispute CET Hex:** <br/><span id = "dispute-hex"></span><br/>
+**Dispute CET TxId:** <br/><span id = "dispute-tx-id" color="green"></span><br/>
+**Dispute CET Hex:** <br/><span id = "dispute-hex" color="green"></span><br/>
 
 ----
 \\(RedemptionTx: txin_{AlicePayoff}(Pub_{Alice} + s_{answer}G) = txout_{AlicePayoff}(Pub_{Alice}) \\) <br/>
 \\(signature = (s_{Alice} + s_{answer}) || (R_{Alice} + R_{question})\\)
 <br/><br/>
 
-**Dispute Redemption TxId:** <br/><span id = "dispute-red-tx-id"></span><br/>
-**Dispute Redemption Hex:** <br/><span id = "dispute-red-hex"></span><br/>
+**Dispute Redemption TxId:** <br/><span id = "dispute-red-tx-id" color="green"></span><br/>
+**Dispute Redemption Hex:** <br/><span id = "dispute-red-hex" color="green"></span><br/>
 
 ----
 <br/>
