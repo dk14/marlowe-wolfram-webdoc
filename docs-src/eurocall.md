@@ -273,8 +273,9 @@ This value is gonna be used as a secret (private key corresponding to adaptor pu
 
 # Prepare Transactions for Bitcoin DLC
 
-https://adiabat.github.io/dlc.pdf <br/>
-https://docs.google.com/document/d/1TVYvpZwwGLrSYHtnpoEoSE1csMSZfZ-A7xF9w0viMIs/edit?usp=sharing <br/>
+Orifinal DLC paper: https://adiabat.github.io/dlc.pdf <br/>
+DLC and Oracles: https://docs.google.com/document/d/1TVYvpZwwGLrSYHtnpoEoSE1csMSZfZ-A7xF9w0viMIs/edit?usp=sharing <br/>
+Decode TX hexes (choose Testnet): https://live.blockcypher.com/btc/decodetx/ <br/>
 
 Alice: 
 * secret (hex): <br/><input id = "alice-secret" value="C90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B14E5C9" size = 80></input>
