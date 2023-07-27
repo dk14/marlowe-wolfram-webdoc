@@ -205,17 +205,17 @@ Generate Marlowe contract!
 <br/>
 <br/>
 <div id="progress-offset" style="display:none"></div>
-<progress id="sampling-progress" value="0" max="100" style="display:none"></progress>
+
 
 *Note: this is webarchived slightly edited SNAPSHOT of open source Marlowe Playground, **NOT ACTUAL** PLAYGROUND BY IOHK (see https://replayweb.page/docs/wacz-format, actual Playground might differ: https://play.marlowe.iohk.io/, https://github.com/input-output-hk/marlowe-playground). Do NOT trust this for any other purposes than educational. Generator auto-fills the contract for you (since original playground doesn't support that), so you could simulate the contract. USE actual https://play.marlowe.iohk.io/ for contract development.*
+
+<progress id="sampling-progress" value="0" max="100" style="display:none"></progress>
 
 <iframe src="./marlowe.html" 
 title="Marlowe" height="800" width = "100%" id = "marlowe-frame" 
 style = "filter: blur(1.5px) grayscale(80%) hue-rotate(30deg) sepia(10%); pointer-events: none" 
 frameborder="no">
 </iframe>
-
-
 
 # Sampling
 
