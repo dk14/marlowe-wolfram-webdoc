@@ -3,7 +3,8 @@ title: Butterfly Spread
 layout: default
 ---
 
-
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 # Wolfram Oracle
 Wolfram app-id (use your own, https://products.wolframalpha.com/simple-api/documentation): <input id = "wf-app-id" value="6WU6JX-46EP5U9AGX"></input>
@@ -109,7 +110,9 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
             window.activeTicker = window.tick
             if (!window.flag) {
                 window.flag = true
-                document.querySelector('#strike').value = window.tick
+                document.querySelector('#strike').value = window.tick - 200
+                document.querySelector('#strike2').value = window.tick
+                document.querySelector('#strike3').value = window.tick + 200
                 document.querySelector('#minValue').value = parseInt(document.querySelector('#strike').value) - 200
                 document.querySelector('#maxValue').value = parseInt(document.querySelector('#strike').value) + (parseInt(document.querySelector('#premium').value) + parseInt(document.querySelector('#margin').value)) * parseInt(document.querySelector('#notional').value) + 200
                 btcUpdater()
@@ -168,8 +171,13 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
 Let's generate marlowe European Spread contract first. Alice and Bob are betting on BTC price volatility. 
 
 Contract pays intrinsically when price is between strike1 and strike3. It pays maximum amount when price is at strike2.
-Unlike with option, Bob's margin can be deduced from strikes themselves as \\((value_{strike2} = (strike_2 - strike_1)*notional_1\\)).
-Also, \\((strike_2 - strike_1)*notional_1 = (strike3 - strike_2)*notional_2\\) must hold, thus notional_2 can be deduced.
+Unlike with option, Bob's margin can be deduced from strikes themselves as:<br/> 
+\\((value_{strike2} = (strike_2 - strike_1)*notional_1\\)).
+
+Also, <br/>
+\\((strike_2 - strike_1)*notional_1 = (strike3 - strike_2)*notional_2\\) 
+
+must hold, thus notional_2 can be deduced.
 
 
 As with simple call, the risk is amortized for small price changes between Alice's premium at risk and Bob's margin at risk, leveraged by notionals. The deal is P2P, thus fully collatrerized, no "pooled margin account" risks involved.<br/>
@@ -179,8 +187,11 @@ Cardano version: https://github.com/dk14/marlowe-wolfram-starter-kit/blob/main/2
 Contract terms:
 
 * Contract strike is <input type="number" id="strike" name="quantity" min="1" max="100000" value="30000"></input> usd
+* Contract strike2 is <input type="number" id="strike2" name="quantity" min="1" max="100000" value="30000"></input> usd
+* Contract strike3 is <input type="number" id="strike3" name="quantity" min="1" max="100000" value="30000"></input> usd
 * Alice pays premium of <input type="number" id="premium" name="quantity" min="1" max="100000" value="200"></input> usd
 * Notional/Leverage is <input type="number" id="notional" name="quantity" min="1" max="100000" value="1"></input> btc
+* Notional2/Leverage2 is <input type="number" id="notional2" name="quantity" min="1" max="100000" value="1"></input> btc
 * Bob's margin is <input type="number" id="margin" name="quantity" min="1" max="100000" value="300"></input> usd
 * Oracle range is <input type="number" id="minValue" name="quantity" min="1" max="100000" value="29900"></input> to <input type="number" id="maxValue" name="quantity" min="1" max="100000" value="30700"></input>
 
@@ -189,8 +200,11 @@ Contract terms:
     window.extractTerms = () => {
         return {
             strike: parseInt(document.querySelector('#strike').value),
+            strike2: parseInt(document.querySelector('#strike2').value),
+            strike3: parseInt(document.querySelector('#strike3').value),
             premium: parseInt(document.querySelector('#premium').value),
-            notional: parseInt(document.querySelector('#notional').value),
+            notional1: parseInt(document.querySelector('#notional').value),
+            notional2: parseInt(document.querySelector('#notional2').value),
             margin: parseInt(document.querySelector('#margin').value),
             minValue: parseInt(document.querySelector('#minValue').value),
             maxValue: parseInt(document.querySelector('#maxValue').value),
@@ -201,7 +215,7 @@ Contract terms:
 
 <button type="button" style="height: 30px" onclick="
     document.querySelector('#marlowe-frame').style = ''; 
-    window.api.injectMarloweContract({template: 'eurocall', terms: extractTerms()}); 
+    window.api.injectMarloweContract({template: 'butterfly', terms: extractTerms()}); 
     document.querySelector('#sample-btn').disabled=false; 
     document.querySelector('#plot-alpha-btn').hidden=true;
     document.querySelector('#download-csv-btn').hidden=true;
@@ -239,8 +253,7 @@ Let's sample Marlowe contract and plot the payoff curve.
 <div id = "wolf-plot"></div>
 
 # Prepare Oracle R and s values for Bitcoin DLC
-  <script id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
 
 Warning: Don't use any of it with actual Bitcoin mainnet - educational purposes only <br/>
 

@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Wolfram Marlowe Oracle Examples | Eurocall</title>
+  <title>Wolfram Marlowe Oracle Examples | Butterfly Spread</title>
   
 
   <link rel="icon" href="/marlowe-wolfram-webdoc/favicon.png">
@@ -47,14 +47,14 @@
 
     
     <div class="nav-screen"></div>
-    <nav class="nav-list"><ul><li><a href="/marlowe-wolfram-webdoc">Home</a></li><li><a href="/marlowe-wolfram-webdoc/butterfly">Butterfly Spread</a></li><li><a href="/marlowe-wolfram-webdoc/eurocall" class="current-page">Eurocall</a></li></ul></li></nav>
+    <nav class="nav-list"><ul><li><a href="/marlowe-wolfram-webdoc">Home</a></li><li><a href="/marlowe-wolfram-webdoc/butterfly" class="current-page">Butterfly Spread</a></li><li><a href="/marlowe-wolfram-webdoc/eurocall">Eurocall</a></li></ul></li></nav>
     
 
     <div class="page-content-main">
       <article class="post">
         <header class="post-header">
           
-          <h1 class="post-title">Eurocall</h1>
+          <h1 class="post-title">Butterfly Spread</h1>
         </header>
 
         
@@ -64,7 +64,10 @@
         </div>
         
 
-        <div class="post-content"><h1 id="wolfram-oracle">Wolfram Oracle</h1>
+        <div class="post-content"><script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<h1 id="wolfram-oracle">Wolfram Oracle</h1>
 <p>Wolfram app-id (use your own, <a href="https://products.wolframalpha.com/simple-api/documentation">https://products.wolframalpha.com/simple-api/documentation</a>): <input id = "wf-app-id" value="6WU6JX-46EP5U9AGX"></input>
 <br/>
 Cors proxy prefix (to query wolfram services): <input id = "cors-proxy-prefix" value="https://corsproxy.io/?"></input></p>
@@ -166,7 +169,9 @@ Cors proxy prefix (to query wolfram services): <input id = "cors-proxy-prefix" v
             window.activeTicker = window.tick
             if (!window.flag) {
                 window.flag = true
-                document.querySelector('#strike').value = window.tick
+                document.querySelector('#strike').value = window.tick - 200
+                document.querySelector('#strike2').value = window.tick
+                document.querySelector('#strike3').value = window.tick + 200
                 document.querySelector('#minValue').value = parseInt(document.querySelector('#strike').value) - 200
                 document.querySelector('#maxValue').value = parseInt(document.querySelector('#strike').value) + (parseInt(document.querySelector('#premium').value) + parseInt(document.querySelector('#margin').value)) * parseInt(document.querySelector('#notional').value) + 200
                 btcUpdater()
@@ -221,13 +226,23 @@ Cors proxy prefix (to query wolfram services): <input id = "cors-proxy-prefix" v
 </script>
 
 <h1 id="marlowe-contract">Marlowe Contract</h1>
-<p>Let&#39;s generate marlowe European Call contract first. Alice and Bob are betting on BTC price. The risk is amortized for small price changes between Alice&#39;s premium at risk and Bob&#39;s margin at risk, leveraged by notional. The deal is P2P, thus fully collatrerized, no &quot;pooled margin account&quot; risks involved.<br/></p>
+<p>Let&#39;s generate marlowe European Spread contract first. Alice and Bob are betting on BTC price volatility. </p>
+<p>Contract pays intrinsically when price is between strike1 and strike3. It pays maximum amount when price is at strike2.
+Unlike with option, Bob&#39;s margin can be deduced from strikes themselves as:<br/> 
+\((value_{strike2} = (strike_2 - strike_1)*notional_1\)).</p>
+<p>Also, <br/>
+\((strike_2 - strike_1)<em>notional_1 = (strike3 - strike_2)</em>notional_2\) </p>
+<p>must hold, thus notional_2 can be deduced.</p>
+<p>As with simple call, the risk is amortized for small price changes between Alice&#39;s premium at risk and Bob&#39;s margin at risk, leveraged by notionals. The deal is P2P, thus fully collatrerized, no &quot;pooled margin account&quot; risks involved.<br/></p>
 <p>Cardano version: <a href="https://github.com/dk14/marlowe-wolfram-starter-kit/blob/main/22-eurocall.ipynb">https://github.com/dk14/marlowe-wolfram-starter-kit/blob/main/22-eurocall.ipynb</a></p>
 <p>Contract terms:</p>
 <ul>
 <li>Contract strike is <input type="number" id="strike" name="quantity" min="1" max="100000" value="30000"></input> usd</li>
+<li>Contract strike2 is <input type="number" id="strike2" name="quantity" min="1" max="100000" value="30000"></input> usd</li>
+<li>Contract strike3 is <input type="number" id="strike3" name="quantity" min="1" max="100000" value="30000"></input> usd</li>
 <li>Alice pays premium of <input type="number" id="premium" name="quantity" min="1" max="100000" value="200"></input> usd</li>
 <li>Notional/Leverage is <input type="number" id="notional" name="quantity" min="1" max="100000" value="1"></input> btc</li>
+<li>Notional2/Leverage2 is <input type="number" id="notional2" name="quantity" min="1" max="100000" value="1"></input> btc</li>
 <li>Bob&#39;s margin is <input type="number" id="margin" name="quantity" min="1" max="100000" value="300"></input> usd</li>
 <li>Oracle range is <input type="number" id="minValue" name="quantity" min="1" max="100000" value="29900"></input> to <input type="number" id="maxValue" name="quantity" min="1" max="100000" value="30700"></input></li>
 </ul>
@@ -236,8 +251,11 @@ Cors proxy prefix (to query wolfram services): <input id = "cors-proxy-prefix" v
     window.extractTerms = () => {
         return {
             strike: parseInt(document.querySelector('#strike').value),
+            strike2: parseInt(document.querySelector('#strike2').value),
+            strike3: parseInt(document.querySelector('#strike3').value),
             premium: parseInt(document.querySelector('#premium').value),
-            notional: parseInt(document.querySelector('#notional').value),
+            notional1: parseInt(document.querySelector('#notional').value),
+            notional2: parseInt(document.querySelector('#notional2').value),
             margin: parseInt(document.querySelector('#margin').value),
             minValue: parseInt(document.querySelector('#minValue').value),
             maxValue: parseInt(document.querySelector('#maxValue').value),
@@ -248,7 +266,7 @@ Cors proxy prefix (to query wolfram services): <input id = "cors-proxy-prefix" v
 
 <p><button type="button" style="height: 30px" onclick="
     document.querySelector('#marlowe-frame').style = ''; 
-    window.api.injectMarloweContract({template: 'eurocall', terms: extractTerms()}); 
+    window.api.injectMarloweContract({template: 'butterfly', terms: extractTerms()}); 
     document.querySelector('#sample-btn').disabled=false; 
     document.querySelector('#plot-alpha-btn').hidden=true;
     document.querySelector('#download-csv-btn').hidden=true;
@@ -281,9 +299,6 @@ frameborder="no">
 <div id = "wolf-plot"></div>
 
 <h1 id="prepare-oracle-r-and-s-values-for-bitcoin-dlc">Prepare Oracle R and s values for Bitcoin DLC</h1>
-  <script id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
 <p>Warning: Don&#39;t use any of it with actual Bitcoin mainnet - educational purposes only <br/></p>
 <p>Oracle quesion: <input id = "oracle-question" value="What is the price of BTC in USD" size = 80></input>
 <br/>
@@ -371,7 +386,7 @@ Decode TX hexes (choose Testnet): <a href="https://live.blockcypher.com/btc/deco
         
         <p>
           Caught a mistake or want to contribute to the documentation?
-          <a href="https://github.com/dk14/marlowe-wolfram-webdoc/tree/master/docs-src/eurocall.md" target="_blank" rel="noopener">Edit this page on Github</a>
+          <a href="https://github.com/dk14/marlowe-wolfram-webdoc/tree/master/docs-src/butterfly.md" target="_blank" rel="noopener">Edit this page on Github</a>
         </p>
         
 
