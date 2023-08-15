@@ -35,9 +35,9 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
 
             document.querySelector("#oracle-answer").textContent = window.activeTicker
 
-            document.querySelector("#twisted-pk").textContent = window.api.schnorrApi().adaptorPublic(document.querySelector("#oracle-public-key").textContent, answer, document.querySelector("#oracle-r-value").textContent)
+            document.querySelector("#twisted-pk").textContent = window.api.schnorrApi().adaptorPublic(document.querySelector("#oracle-public-key").textContent, answer, document.querySelector("#oracle-r-value").textContent).padStart(64, "0")
 
-            document.querySelector("#oracle-s-value").textContent = window.api.schnorrApi().signatureSValue(document.querySelector("#oracle-secret").value, document.querySelector("#oracle-k-value").textContent, answer)
+            document.querySelector("#oracle-s-value").textContent = window.api.schnorrApi().signatureSValue(document.querySelector("#oracle-secret").value, document.querySelector("#oracle-k-value").textContent, answer).padStart(64, "0")
 
             let aliceAmountIn = parseInt(document.querySelector("#alice-amount-in").value)
             let aliceSecret = document.querySelector("#alice-secret").value
@@ -80,7 +80,8 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
             document.querySelector("#closing-tx-id").textContent = closingTx.txid
             document.querySelector("#closing-hex").textContent = closingTx.hex
 
-
+            console.log(alicePk)
+            console.log(document.querySelector("#twisted-pk").textContent)
             let disputeTx = window.api.txApi().genAliceCet(multiIn, alicePk, bobPk, document.querySelector("#twisted-pk").textContent, aliceAmountIn, bobAmountIn)
 
             document.querySelector("#dispute-tx-id").textContent = disputeTx.txid
