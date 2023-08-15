@@ -1,5 +1,5 @@
 ---
-title: Butterfly Spread
+title: 2. Butterfly Spread
 layout: default
 ---
 
