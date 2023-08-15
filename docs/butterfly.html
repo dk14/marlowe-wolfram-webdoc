@@ -229,10 +229,8 @@ Cors proxy prefix (to query wolfram services): <input id = "cors-proxy-prefix" v
 <p>Let&#39;s generate marlowe European Spread contract first. Alice and Bob are betting on BTC price volatility. </p>
 <p>Contract pays intrinsically when price is between strike1 and strike3. It pays maximum amount when price is at strike2.
 Unlike with option, Bob&#39;s margin can be deduced from strikes themselves as:<br/> 
-\((value_{strike2} = (strike_2 - strike_1)*notional_1\)).</p>
-<p>Also, <br/>
-\((strike_2 - strike_1)<em>notional_1 = (strike3 - strike_2)</em>notional_2\) </p>
-<p>must hold, thus notional_2 can be deduced.</p>
+\( value_{strike2} = (strike_2 - strike_1)*notional_1 \).</p>
+<p>Also: \( (strike_2 - strike_1) * notional_1 = (strike_3 - strike_2) * notional_2 \) must hold, thus \(notional_2\) can be deduced.</p>
 <p>Contract terms:</p>
 <ul>
 <li>Contract strike is <input type="number" id="strike" name="quantity" min="1" max="100000" value="30000"></input> usd</li>

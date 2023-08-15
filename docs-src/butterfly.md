@@ -172,12 +172,9 @@ Let's generate marlowe European Spread contract first. Alice and Bob are betting
 
 Contract pays intrinsically when price is between strike1 and strike3. It pays maximum amount when price is at strike2.
 Unlike with option, Bob's margin can be deduced from strikes themselves as:<br/> 
-\\((value_{strike2} = (strike_2 - strike_1)*notional_1\\)).
+\\( value_{strike2} = (strike_2 - strike_1)*notional_1 \\).
 
-Also, <br/>
-\\((strike_2 - strike_1)*notional_1 = (strike3 - strike_2)*notional_2\\) 
-
-must hold, thus notional_2 can be deduced.
+Also: \\( (strike_2 - strike_1) * notional_1 = (strike_3 - strike_2) * notional_2 \\) must hold, thus \\(notional_2\\) can be deduced.
 
 
 Contract terms:
