@@ -180,10 +180,6 @@ Also, <br/>
 must hold, thus notional_2 can be deduced.
 
 
-As with simple call, the risk is amortized for small price changes between Alice's premium at risk and Bob's margin at risk, leveraged by notionals. The deal is P2P, thus fully collatrerized, no "pooled margin account" risks involved.<br/>
-
-Cardano version: https://github.com/dk14/marlowe-wolfram-starter-kit/blob/main/22-eurocall.ipynb
-
 Contract terms:
 
 * Contract strike is <input type="number" id="strike" name="quantity" min="1" max="100000" value="30000"></input> usd
