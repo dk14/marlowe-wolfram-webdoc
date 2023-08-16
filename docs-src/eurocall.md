@@ -154,6 +154,7 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
             document.querySelector('#strike').value = window.tick
             document.querySelector('#minValue').value = parseInt(document.querySelector('#strike').value) - 200
             document.querySelector('#maxValue').value = parseInt(document.querySelector('#strike').value) + (parseInt(document.querySelector('#premium').value) + parseInt(document.querySelector('#margin').value)) * parseInt(document.querySelector('#notional').value) + 200
+            btcUpdater()
         }
     });
     document.querySelector('#wf-app-id').addEventListener('input', function() {

@@ -115,8 +115,16 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
                 document.querySelector('#strike3').value = window.tick + 200
                 document.querySelector('#minValue').value = parseInt(document.querySelector('#strike').value) - 200
                 document.querySelector('#maxValue').value = parseInt(document.querySelector('#strike').value) + (parseInt(document.querySelector('#premium').value) + parseInt(document.querySelector('#margin').value)) * parseInt(document.querySelector('#notional').value) + 200
+
+               // document.querySelector('#notional2').value = (parseInt(document.querySelector('#strike2').value) - parseInt(document.querySelector('#strike').value)) * parseInt(document.querySelector('#notional').value) / ((parseInt(document.querySelector('#strike3').value) - parseInt(document.querySelector('#strike2').value)))
+
+              
+
                 btcUpdater()
             }
+
+             document.querySelector('#strike3').value = (parseInt(document.querySelector('#strike2').value) - parseInt(document.querySelector('#strike').value)) * parseInt(document.querySelector('#notional').value) / parseInt(document.querySelector('#notional2').value) + parseInt(document.querySelector('#strike2').value)
+               console.log(document.querySelector('#strike3').value)
             
         }
     })
@@ -153,9 +161,17 @@ BTC price is: <input id = "ticker"></input> (<input type="checkbox" id="lock" na
         if (input != null) {
             window.tick = input
             window.activeTicker = window.tick
-            document.querySelector('#strike').value = window.tick
+
+            document.querySelector('#strike').value = window.tick - 200
+            document.querySelector('#strike2').value = window.tick
+            document.querySelector('#strike3').value = window.tick + 200
             document.querySelector('#minValue').value = parseInt(document.querySelector('#strike').value) - 200
             document.querySelector('#maxValue').value = parseInt(document.querySelector('#strike').value) + (parseInt(document.querySelector('#premium').value) + parseInt(document.querySelector('#margin').value)) * parseInt(document.querySelector('#notional').value) + 200
+
+            document.querySelector('#strike3').value = (parseInt(document.querySelector('#strike2').value) - parseInt(document.querySelector('#strike').value)) * parseInt(document.querySelector('#notional').value) / parseInt(document.querySelector('#notional2').value) + parseInt(document.querySelector('#strike2').value)
+               console.log(document.querySelector('#strike3').value)
+
+            btcUpdater()
         }
     });
     document.querySelector('#wf-app-id').addEventListener('input', function() {
@@ -172,16 +188,22 @@ Let's generate marlowe European Spread contract first. Alice and Bob are betting
 
 Contract pays intrinsically when price is between strike1 and strike3. It pays maximum amount when price is at strike2.
 Unlike with option, Bob's margin can be deduced from strikes themselves as:<br/> 
-\\( value_{strike2} = (strike_2 - strike_1)*notional_1 \\).
+\\( value_{strike2} = (strike_2 - strike_1)*notional_1 \\). In this lesson, however, we leave margin configurable in order to make startegies as Condor simulatable.
 
-Also: \\( (strike_2 - strike_1) * notional_1 = (strike_3 - strike_2) * notional_2 \\) must hold, thus \\(notional_2\\) can be deduced.
+Also: \\( (strike_2 - strike_1) * notional_1 = (strike_3 - strike_2) * notional_2 \\) must hold, thus \\(notional_2\\) can be deduced: \\( notional_2 = (strike_2 - strike_1) * notional_1 / (strike_3 - strike_2) \\)
 
+Or alternatively \\( strike_3 \\) can be deduced from strikes and notionals: <br/>
+
+\\( strike_3 =  (strike_2 - strike_1) * notional_1 / notional_2 + strike_2\\)
+
+This lesson shows P2P spread, classic spreads can be simulated as portfolios of 4 options (strategies):</br>
+https://en.wikipedia.org/wiki/Butterfly_(options)
 
 Contract terms:
 
-* Contract strike is <input type="number" id="strike" name="quantity" min="1" max="100000" value="30000"></input> usd
-* Contract strike2 is <input type="number" id="strike2" name="quantity" min="1" max="100000" value="30000"></input> usd
-* Contract strike3 is <input type="number" id="strike3" name="quantity" min="1" max="100000" value="30000"></input> usd
+* Contract strike (left wing) is <input type="number" id="strike" name="quantity" min="1" max="100000" value="29800"></input> usd
+* Contract strike2 (middle) is <input type="number" id="strike2" name="quantity" min="1" max="100000" value="30000"></input> usd
+* Contract strike3 (right wing) is <input type="number" id="strike3" name="quantity" min="1" max="100000" value="30200"></input> usd
 * Alice pays premium of <input type="number" id="premium" name="quantity" min="1" max="100000" value="200"></input> usd
 * Notional/Leverage is <input type="number" id="notional" name="quantity" min="1" max="100000" value="1"></input> btc
 * Notional2/Leverage2 is <input type="number" id="notional2" name="quantity" min="1" max="100000" value="1"></input> btc

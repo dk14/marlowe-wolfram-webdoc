@@ -238,7 +238,7 @@ if (window.marloweWindow != undefined && !window.isMarlowe) {
             
         }
         poll()
-        setInterval(poll, 10000)
+        setInterval(poll, 1000)
         setInterval(() => window.dispatchEvent(new Event("clock")), 500)
 
     })
